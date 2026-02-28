@@ -10,7 +10,7 @@ QUEUE_NAME = 'product_tasks'
 
 def process_message(message_data):
     action = message_data.get('action')
-    product_repo = ProductRepository()
+    product_repository = ProductRepository()
 
     try:
         if action == 'create':
@@ -21,14 +21,14 @@ def process_message(message_data):
                 brand=data['brand'],
                 user_id=data['user_id']
             )
-            product_repo.create(new_product)
+            product_repository.create(new_product)
             print(f"[WORKER] Sucesso: Produto '{data['name']}' criado no banco!")
 
         elif action == 'update':
             product_id = message_data.get('product_id')
             data = message_data.get('data')
 
-            product = product_repo.get_by_id(product_id)
+            product = product_repository.get_by_id(product_id)
             if product:
                 if 'name' in data:
                     product.name = data['name']
@@ -37,7 +37,7 @@ def process_message(message_data):
                 if 'brand' in data:
                     product.brand = data['brand']
 
-                product_repo.update()
+                product_repository.update(product)
                 print(f"[WORKER] Sucesso: Produto ID {product_id} atualizado!")
             else:
                 print(f"[WORKER - AVISO] Produto ID {product_id} não encontrado para atualização.")
@@ -45,9 +45,9 @@ def process_message(message_data):
         elif action == 'delete':
             product_id = message_data.get('product_id')
 
-            product = product_repo.get_by_id(product_id)
+            product = product_repository.get_by_id(product_id)
             if product:
-                product_repo.delete(product)
+                product_repository.delete(product)
                 print(f"[WORKER] Sucesso: Produto ID {product_id} deletado!")
             else:
                 print(f"[WORKER - AVISO] Produto ID {product_id} não encontrado para exclusão.")

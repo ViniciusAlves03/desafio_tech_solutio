@@ -15,7 +15,7 @@ class IProductRepository(ABC):
         pass
 
     @abstractmethod
-    def update(self) -> None:
+    def update(self, product: Product) -> None:
         pass
 
     @abstractmethod

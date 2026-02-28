@@ -57,7 +57,7 @@ class UserService:
             if 'password' in data:
                 user.set_password(data['password'])
 
-            self.user_repository.update()
+            self.user_repository.update(user)
             return user
         except Exception as error:
             raise error
