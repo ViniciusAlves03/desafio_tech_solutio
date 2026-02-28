@@ -61,6 +61,7 @@ def process_message(message_data):
 
 def run_worker():
     print("[WORKER] Iniciando o processador de fila...")
+    time.sleep(5)
     app = create_app()
     with app.app_context():
         while True:
