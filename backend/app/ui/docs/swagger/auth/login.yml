@@ -1,0 +1,23 @@
+tags:
+  - Autenticação
+summary: Autentica o utilizador e retorna o Token JWT
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          login:
+            type: string
+            example: admin@email.com
+          password:
+            type: string
+            example: senha_segura123
+responses:
+  200:
+    description: Sucesso. Retorna o token de acesso.
+  400:
+    description: Dados de entrada inválidos.
+  401:
+    description: Credenciais incorretas ou não autorizadas.

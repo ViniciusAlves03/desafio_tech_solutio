@@ -1,0 +1,16 @@
+tags:
+  - Produtos
+summary: Busca um produto pelo ID
+security:
+  - bearerAuth: []
+parameters:
+  - in: path
+    name: id
+    schema:
+      type: integer
+    required: true
+responses:
+  200:
+    description: Produto encontrado.
+  404:
+    description: Produto não encontrado.

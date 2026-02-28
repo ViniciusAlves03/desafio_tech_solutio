@@ -1,0 +1,37 @@
+tags:
+  - Produtos
+summary: Enfileira a criação de um novo produto com imagem
+description: Operação assíncrona. Os dados são enviados para a fila do Redis e processados pelo Worker.
+security:
+  - bearerAuth: []
+requestBody:
+  required: true
+  content:
+    multipart/form-data:
+      schema:
+        type: object
+        required: [name, price, brand, quantity]
+        properties:
+          name:
+            type: string
+            example: Teclado Mecânico
+          price:
+            type: number
+            example: 250.50
+          brand:
+            type: string
+            example: Razer
+          quantity:
+            type: integer
+            example: 15
+          image:
+            type: string
+            format: binary
+            description: Ficheiro JPG/PNG (Opcional)
+responses:
+  202:
+    description: Produto enfileirado para criação.
+  400:
+    description: Erro de validação.
+  401:
+    description: Não autorizado.

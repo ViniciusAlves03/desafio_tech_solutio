@@ -1,0 +1,11 @@
+tags:
+  - Autenticação
+summary: Realiza o logout do utilizador
+description: Invalida o token JWT atual colocando-o na blocklist do Redis.
+security:
+  - bearerAuth: []
+responses:
+  200:
+    description: Logout realizado com sucesso.
+  401:
+    description: Token em falta ou inválido.

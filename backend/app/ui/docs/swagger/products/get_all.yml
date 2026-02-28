@@ -1,0 +1,8 @@
+tags:
+  - Produtos
+summary: Lista todos os produtos
+security:
+  - bearerAuth: []
+responses:
+  200:
+    description: Lista de produtos carregada do banco.

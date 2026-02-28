@@ -1,0 +1,31 @@
+tags:
+  - Usuários
+summary: Atualiza os dados do utilizador
+description: Pode enviar apenas os campos que deseja alterar. Um utilizador só pode alterar a si mesmo.
+security:
+  - bearerAuth: []
+parameters:
+  - in: path
+    name: id
+    schema:
+      type: integer
+    required: true
+    description: ID do utilizador
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          username:
+            type: string
+            example: joaosilva_novo
+          password:
+            type: string
+            example: nova_senha_123
+responses:
+  200:
+    description: Utilizador atualizado com sucesso.
+  403:
+    description: Acesso negado (tentou alterar outro utilizador).

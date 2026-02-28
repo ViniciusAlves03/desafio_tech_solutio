@@ -1,0 +1,16 @@
+tags:
+  - Produtos
+summary: Enfileira a eliminação de um produto
+security:
+  - bearerAuth: []
+parameters:
+  - in: path
+    name: id
+    schema:
+      type: integer
+    required: true
+responses:
+  202:
+    description: Eliminação enfileirada.
+  403:
+    description: Acesso negado.

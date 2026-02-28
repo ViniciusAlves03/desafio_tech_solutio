@@ -2,6 +2,7 @@ import base64
 import io
 from flask import Blueprint, request, jsonify, make_response, send_file
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from flasgger import swag_from
 from app.di.di import container
 from app.infrastructure.database.schemas.product_schema import product_schema, products_schema
 from app.application.domain.exception.api_exception_manager import APIExceptionManager
@@ -11,6 +12,7 @@ product_service = container.get_product_service()
 
 @product_bp.route('/products', methods=['POST'])
 @jwt_required()
+@swag_from('../docs/swagger/products/create.yml')
 def create_product():
     try:
         data = request.form.to_dict()
@@ -28,6 +30,7 @@ def create_product():
 
 @product_bp.route('/products', methods=['GET'])
 @jwt_required()
+@swag_from('../docs/swagger/products/get_all.yml')
 def get_products():
     try:
         products = product_service.get_all()
@@ -38,6 +41,7 @@ def get_products():
 
 @product_bp.route('/products/<int:id>', methods=['GET'])
 @jwt_required()
+@swag_from('../docs/swagger/products/get_by_id.yml')
 def get_product(id):
     try:
         product = product_service.get_by_id(id)
@@ -48,6 +52,7 @@ def get_product(id):
 
 @product_bp.route('/products/<int:id>', methods=['PUT', 'PATCH'])
 @jwt_required()
+@swag_from('../docs/swagger/products/update.yml')
 def update_product(id):
     try:
         data = request.form.to_dict()
@@ -66,6 +71,7 @@ def update_product(id):
 
 @product_bp.route('/products/<int:id>', methods=['DELETE'])
 @jwt_required()
+@swag_from('../docs/swagger/products/delete.yml')
 def delete_product(id):
     try:
         product_service.enqueue_delete(id, int(get_jwt_identity()))
@@ -75,6 +81,8 @@ def delete_product(id):
         return make_response(jsonify(api_error.toJSON()), api_error.code)
 
 @product_bp.route('/products/<int:id>/image', methods=['GET'])
+@jwt_required()
+@swag_from('../docs/swagger/products/get_image.yml')
 def get_product_image(id):
     try:
         product = product_service.get_by_id(id)

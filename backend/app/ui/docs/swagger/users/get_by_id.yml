@@ -1,0 +1,17 @@
+tags:
+  - Usuários
+summary: Busca um utilizador pelo ID
+security:
+  - bearerAuth: []
+parameters:
+  - in: path
+    name: id
+    schema:
+      type: integer
+    required: true
+    description: ID numérico do utilizador
+responses:
+  200:
+    description: Dados do utilizador encontrados.
+  404:
+    description: Utilizador não encontrado.

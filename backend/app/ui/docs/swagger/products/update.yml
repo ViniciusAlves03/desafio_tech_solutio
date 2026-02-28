@@ -1,0 +1,29 @@
+tags:
+  - Produtos
+summary: Enfileira a atualização de um produto
+description: Pode alterar texto ou enviar uma nova imagem.
+security:
+  - bearerAuth: []
+parameters:
+  - in: path
+    name: id
+    schema:
+      type: integer
+    required: true
+requestBody:
+  content:
+    multipart/form-data:
+      schema:
+        type: object
+        properties:
+          price:
+            type: number
+            example: 199.90
+          image:
+            type: string
+            format: binary
+responses:
+  202:
+    description: Atualização enfileirada com sucesso.
+  403:
+    description: Sem permissão (produto pertence a outro).

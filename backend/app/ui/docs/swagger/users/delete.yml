@@ -1,0 +1,17 @@
+tags:
+  - Usuários
+summary: Elimina a conta do utilizador
+security:
+  - bearerAuth: []
+parameters:
+  - in: path
+    name: id
+    schema:
+      type: integer
+    required: true
+    description: ID do utilizador
+responses:
+  204:
+    description: Utilizador eliminado com sucesso (Sem conteúdo).
+  403:
+    description: Acesso negado.

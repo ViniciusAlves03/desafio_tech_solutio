@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify, url_for, make_response
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from flasgger import swag_from
 from app.di.di import container
 from app.infrastructure.database.schemas.user_schema import user_schema, users_schema
 from app.application.domain.exception.api_exception_manager import APIExceptionManager
@@ -8,6 +9,7 @@ user_bp = Blueprint('user_bp', __name__)
 user_service = container.get_user_service()
 
 @user_bp.route('/users', methods=['POST'])
+@swag_from('../docs/swagger/users/create.yml')
 def create_user():
     try:
         data = user_schema.load(request.get_json())
@@ -23,6 +25,7 @@ def create_user():
 
 @user_bp.route('/users', methods=['GET'])
 @jwt_required()
+@swag_from('../docs/swagger/users/get_all.yml')
 def get_users():
     try:
         users = user_service.get_all()
@@ -34,6 +37,7 @@ def get_users():
 
 @user_bp.route('/users/<int:id>', methods=['GET'])
 @jwt_required()
+@swag_from('../docs/swagger/users/get_by_id.yml')
 def get_user(id):
     try:
         user = user_service.get_by_id(id)
@@ -45,6 +49,7 @@ def get_user(id):
 
 @user_bp.route('/users/<int:id>', methods=['PATCH'])
 @jwt_required()
+@swag_from('../docs/swagger/users/update.yml')
 def update_user(id):
     try:
         data = user_schema.load(request.get_json(), partial=True)
@@ -57,6 +62,7 @@ def update_user(id):
 
 @user_bp.route('/users/<int:id>', methods=['DELETE'])
 @jwt_required()
+@swag_from('../docs/swagger/users/delete.yml')
 def delete_user(id):
     try:
         user_service.delete_user(id, int(get_jwt_identity()))

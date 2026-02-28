@@ -1,0 +1,20 @@
+tags:
+  - Produtos
+summary: Retorna a imagem do produto
+description: Retorna o binário da imagem guardada na base de dados. Esta rota é privada e exige autenticação.
+security:
+  - bearerAuth: []
+parameters:
+  - in: path
+    name: id
+    schema:
+      type: integer
+    required: true
+    description: ID do produto
+responses:
+  200:
+    description: Ficheiro de imagem retornado com sucesso.
+  401:
+    description: Acesso não autorizado (Token JWT inválido ou em falta).
+  404:
+    description: Produto não encontrado ou não possui imagem.

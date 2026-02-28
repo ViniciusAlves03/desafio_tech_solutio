@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify, make_response
 from flask_jwt_extended import jwt_required, get_jwt
+from flasgger import swag_from
 from app.di.di import container
 from app.application.domain.exception.api_exception_manager import APIExceptionManager
 from app.application.domain.exception.domain_exceptions import ValidationError
@@ -8,6 +9,7 @@ auth_bp = Blueprint('auth_bp', __name__)
 auth_service = container.get_auth_service()
 
 @auth_bp.route('/login', methods=['POST'])
+@swag_from('../docs/swagger/auth/login.yml')
 def login():
     try:
         data = request.get_json()
@@ -25,6 +27,7 @@ def login():
 
 @auth_bp.route('/logout', methods=['POST'])
 @jwt_required()
+@swag_from('../docs/swagger/auth/logout.yml')
 def logout():
     try:
         auth_service.logout(get_jwt()["jti"])

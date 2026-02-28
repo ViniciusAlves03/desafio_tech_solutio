@@ -1,5 +1,6 @@
 from flask import Flask
 import os
+from flasgger import Swagger
 
 from app.infrastructure.database.models.product_model import Product
 from app.infrastructure.database.models.user_model import User
@@ -21,6 +22,31 @@ def create_app():
 
     db.init_app(app)
     jwt.init_app(app)
+
+    app.config['SWAGGER'] = {
+        'title': 'API de Produtos - Desafio Técnico',
+        'openapi': '3.0.0',
+        'uiversion': 3
+    }
+
+    swagger_template = {
+        "info": {
+            "title": "API de Produtos (Clean Architecture)",
+            "description": "Documentação interativa da API com filas no Redis e PostgreSQL.",
+            "version": "1.0.0"
+        },
+        "components": {
+            "securitySchemes": {
+                "bearerAuth": {
+                    "type": "http",
+                    "scheme": "bearer",
+                    "bearerFormat": "JWT",
+                    "description": "Insira o token JWT aqui (sem o prefixo Bearer)."
+                }
+            }
+        }
+    }
+    Swagger(app, template=swagger_template)
 
     @jwt.token_in_blocklist_loader
     def check_if_token_is_revoked(jwt_header, jwt_payload: dict):
