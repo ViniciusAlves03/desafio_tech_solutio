@@ -1,8 +1,8 @@
 from flask import Blueprint, request, jsonify, url_for, make_response
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.di.di import container
-from app.schemas.user_schema import user_schema, users_schema
-from app.exceptions.api_exception_manager import APIExceptionManager
+from app.infrastructure.database.schemas.user_schema import user_schema, users_schema
+from app.application.domain.exception.api_exception_manager import APIExceptionManager
 
 user_bp = Blueprint('user_bp', __name__)
 user_service = container.get_user_service()

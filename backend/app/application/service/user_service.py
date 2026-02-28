@@ -1,6 +1,6 @@
-from app.models.user_model import User
-from app.port.user_repository_interface import IUserRepository
-from app.exceptions.domain_exceptions import NotFoundError, ForbiddenError, ConflictError
+from app.infrastructure.database.models.user_model import User
+from app.application.port.user_repository_interface import IUserRepository
+from app.application.domain.exception.domain_exceptions import NotFoundError, ForbiddenError, ConflictError
 
 class UserService:
     def __init__(self, user_repository: IUserRepository):

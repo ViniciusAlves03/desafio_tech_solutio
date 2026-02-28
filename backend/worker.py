@@ -3,8 +3,8 @@ import time
 from app.app import create_app
 from app.utils.db import db
 from app.utils.redis_client import redis_conn
-from app.models.product_model import Product
-from app.repositories.product_repository import ProductRepository
+from app.infrastructure.database.models.product_model import Product
+from app.infrastructure.repository.product_repository import ProductRepository
 
 QUEUE_NAME = 'product_tasks'
 

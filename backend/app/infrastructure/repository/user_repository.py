@@ -1,7 +1,7 @@
-from app.models.user_model import User
+from app.infrastructure.database.models.user_model import User
 from app.utils.db import db
-from app.port.user_repository_interface import IUserRepository
-from app.exceptions.domain_exceptions import ConflictError, RepositoryError
+from app.application.port.user_repository_interface import IUserRepository
+from app.application.domain.exception.domain_exceptions import ConflictError, RepositoryError
 
 class UserRepository(IUserRepository):
 

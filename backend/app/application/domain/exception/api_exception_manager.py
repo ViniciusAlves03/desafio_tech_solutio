@@ -1,9 +1,9 @@
 from http import HTTPStatus
-from app.exceptions.domain_exceptions import (
+from .domain_exceptions import (
     AuthenticationError, ConflictError, ForbiddenError,
     NotFoundError, RepositoryError, ValidationError
 )
-from app.exceptions.api_error import APIError
+from .api_error import APIError
 
 class APIExceptionManager:
     @staticmethod

@@ -1,8 +1,8 @@
 from flask import Blueprint, request, jsonify, make_response
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.di.di import container
-from app.schemas.product_schema import product_schema, products_schema
-from app.exceptions.api_exception_manager import APIExceptionManager
+from app.infrastructure.database.schemas.product_schema import product_schema, products_schema
+from app.application.domain.exception.api_exception_manager import APIExceptionManager
 
 product_bp = Blueprint('product_bp', __name__)
 product_service = container.get_product_service()

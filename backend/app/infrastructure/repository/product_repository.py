@@ -1,7 +1,7 @@
 from app.utils.db import db
-from app.port.product_repository_interface import IProductRepository
-from app.exceptions.domain_exceptions import ConflictError, RepositoryError
-from app.models.product_model import Product
+from app.application.port.product_repository_interface import IProductRepository
+from app.application.domain.exception.domain_exceptions import ConflictError, RepositoryError
+from app.infrastructure.database.models.product_model import Product
 
 class ProductRepository(IProductRepository):
 

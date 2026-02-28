@@ -1,13 +1,13 @@
-from app.repositories.user_repository import UserRepository
-from app.repositories.product_repository import ProductRepository
+from app.infrastructure.repository.user_repository import UserRepository
+from app.infrastructure.repository.product_repository import ProductRepository
 
-from app.services.auth_service import AuthService
-from app.services.product_service import ProductService
-from app.services.user_service import UserService
+from app.application.service.auth_service import AuthService
+from app.application.service.product_service import ProductService
+from app.application.service.user_service import UserService
 
-from app.port.auth_service_interface import IAuthService
-from app.port.product_service_interface import IProductService
-from app.port.user_service_interface import IUserService
+from app.application.port.auth_service_interface import IAuthService
+from app.application.port.product_service_interface import IProductService
+from app.application.port.user_service_interface import IUserService
 
 class DIContainer:
     def __init__(self):

@@ -1,4 +1,4 @@
-from app.exceptions.domain_exceptions import Error
+from .domain_exceptions import Error
 
 class APIError(Error):
     def __init__(self, code: int, message: str, description: str = ""):
