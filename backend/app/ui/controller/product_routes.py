@@ -1,4 +1,6 @@
-from flask import Blueprint, request, jsonify, make_response
+import base64
+import io
+from flask import Blueprint, request, jsonify, make_response, send_file
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.di.di import container
 from app.infrastructure.database.schemas.product_schema import product_schema, products_schema
@@ -11,8 +13,14 @@ product_service = container.get_product_service()
 @jwt_required()
 def create_product():
     try:
-        data = product_schema.load(request.get_json())
-        product_service.enqueue_create(data, int(get_jwt_identity()))
+        data = request.form.to_dict()
+        valid_data = product_schema.load(data)
+        image_file = request.files.get('image')
+        if image_file:
+            valid_data['image_base64'] = base64.b64encode(image_file.read()).decode('utf-8')
+            valid_data['image_mime_type'] = image_file.mimetype
+
+        product_service.enqueue_create(valid_data, int(get_jwt_identity()))
         return jsonify({"message": "Criação de produto enfileirada com sucesso."}), 202
     except Exception as error:
         api_error = APIExceptionManager.build(error)
@@ -42,10 +50,16 @@ def get_product(id):
 @jwt_required()
 def update_product(id):
     try:
-        data = product_schema.load(request.get_json(), partial=True)
-        product_service.enqueue_update(id, data, int(get_jwt_identity()))
-        return jsonify({"message": "Atualização de produto enfileirada com sucesso."}), 202
+        data = request.form.to_dict()
+        valid_data = product_schema.load(data, partial=True)
 
+        image_file = request.files.get('image')
+        if image_file:
+            valid_data['image_base64'] = base64.b64encode(image_file.read()).decode('utf-8')
+            valid_data['image_mime_type'] = image_file.mimetype
+
+        product_service.enqueue_update(id, valid_data, int(get_jwt_identity()))
+        return jsonify({"message": "Atualização de produto enfileirada com sucesso."}), 202
     except Exception as error:
         api_error = APIExceptionManager.build(error)
         return make_response(jsonify(api_error.toJSON()), api_error.code)
@@ -56,6 +70,21 @@ def delete_product(id):
     try:
         product_service.enqueue_delete(id, int(get_jwt_identity()))
         return jsonify({"message": "Exclusão de produto enfileirada com sucesso."}), 202
+    except Exception as error:
+        api_error = APIExceptionManager.build(error)
+        return make_response(jsonify(api_error.toJSON()), api_error.code)
+
+@product_bp.route('/products/<int:id>/image', methods=['GET'])
+def get_product_image(id):
+    try:
+        product = product_service.get_by_id(id)
+        if not product or not product.image_data:
+            return jsonify({"message": "Imagem não encontrada."}), 404
+
+        return send_file(
+            io.BytesIO(product.image_data),
+            mimetype=product.image_mime_type
+        )
     except Exception as error:
         api_error = APIExceptionManager.build(error)
         return make_response(jsonify(api_error.toJSON()), api_error.code)

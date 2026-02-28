@@ -30,9 +30,12 @@ class ProductService:
                 "action": "create",
                 "data": {
                     "name": data['name'],
-                    "price": float(data['price']),
+                    "price": str(data['price']),
                     "brand": data['brand'],
-                    "user_id": current_user_id
+                    "quantity": int(data['quantity']),
+                    "user_id": current_user_id,
+                    "image_base64": data.get('image_base64'),
+                    "image_mime_type": data.get('image_mime_type')
                 }
             }
             redis_conn.rpush(QUEUE_NAME, json.dumps(message))
@@ -42,16 +45,17 @@ class ProductService:
     def enqueue_update(self, product_id, data, current_user_id):
         try:
             product = self.get_by_id(product_id)
-
             if product.user_id != current_user_id:
                 raise ForbiddenError("Acesso negado. Você só pode alterar seus próprios produtos.")
 
-            update_data = {k: v for k, v in data.items() if k in ['name', 'price', 'brand']}
+            update_data = {k: v for k, v in data.items() if k in ['name', 'price', 'brand', 'quantity', 'image_base64', 'image_mime_type']}
             if not update_data:
                 raise ValidationError("Nenhum dado válido fornecido para atualização.")
 
             if 'price' in update_data:
                 update_data['price'] = float(update_data['price'])
+            if 'quantity' in update_data:
+                update_data['quantity'] = int(update_data['quantity'])
 
             message = {
                 "action": "update",
