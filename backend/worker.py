@@ -10,6 +10,7 @@ QUEUE_NAME = 'product_tasks'
 
 def process_message(message_data):
     action = message_data.get('action')
+    product_repo = ProductRepository()
 
     try:
         if action == 'create':
@@ -20,14 +21,14 @@ def process_message(message_data):
                 brand=data['brand'],
                 user_id=data['user_id']
             )
-            ProductRepository.create(new_product)
+            product_repo.create(new_product)
             print(f"[WORKER] Sucesso: Produto '{data['name']}' criado no banco!")
 
         elif action == 'update':
             product_id = message_data.get('product_id')
             data = message_data.get('data')
 
-            product = ProductRepository.get_by_id(product_id)
+            product = product_repo.get_by_id(product_id)
             if product:
                 if 'name' in data:
                     product.name = data['name']
@@ -36,7 +37,7 @@ def process_message(message_data):
                 if 'brand' in data:
                     product.brand = data['brand']
 
-                ProductRepository.update()
+                product_repo.update()
                 print(f"[WORKER] Sucesso: Produto ID {product_id} atualizado!")
             else:
                 print(f"[WORKER - AVISO] Produto ID {product_id} não encontrado para atualização.")
@@ -44,9 +45,9 @@ def process_message(message_data):
         elif action == 'delete':
             product_id = message_data.get('product_id')
 
-            product = ProductRepository.get_by_id(product_id)
+            product = product_repo.get_by_id(product_id)
             if product:
-                ProductRepository.delete(product)
+                product_repo.delete(product)
                 print(f"[WORKER] Sucesso: Produto ID {product_id} deletado!")
             else:
                 print(f"[WORKER - AVISO] Produto ID {product_id} não encontrado para exclusão.")
@@ -61,9 +62,12 @@ def process_message(message_data):
 
 def run_worker():
     print("[WORKER] Iniciando o processador de fila...")
+
     time.sleep(5)
+
     app = create_app()
     with app.app_context():
+        print("[WORKER] Conectado! Aguardando novas mensagens no Redis...")
         while True:
             try:
                 queue, message = redis_conn.blpop(QUEUE_NAME, timeout=0)
