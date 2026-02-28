@@ -1,5 +1,6 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.utils.db import db
+from sqlalchemy.sql import func
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -8,6 +9,8 @@ class User(db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(256), nullable=False)
+    created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
+    updated_at = db.Column(db.DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -19,5 +22,7 @@ class User(db.Model):
         return {
             "id": self.id,
             "username": self.username,
-            "email": self.email
+            "email": self.email,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None
         }
