@@ -1,53 +1,57 @@
 from app.models.user_model import User
-from app.repositories.user_repository import UserRepository
+from app.port.user_repository_interface import IUserRepository
+from app.exceptions.exceptions import NotFoundException, ForbiddenException, ConflictException
 
 class UserService:
-    @staticmethod
-    def create_user(data):
-        if UserRepository.get_by_email(data['email']):
-            return None, "Este e-mail já está cadastrado."
-        if UserRepository.get_by_username(data['username']):
-            return None, "Este nome de usuário já está em uso."
+    def __init__(self, user_repository: IUserRepository):
+        self.user_repository = user_repository
+
+    def get_all(self):
+        return self.user_repository.get_all()
+
+    def get_by_id(self, user_id):
+        user = self.user_repository.get_by_id(user_id)
+        if not user:
+            raise NotFoundException("Usuário não encontrado.")
+        return user
+
+    def create_user(self, data):
+        if self.user_repository.get_by_email(data['email']):
+            raise ConflictException("Este e-mail já está cadastrado.")
+        if self.user_repository.get_by_username(data['username']):
+            raise ConflictException("Este nome de usuário já está em uso.")
 
         new_user = User(username=data['username'], email=data['email'])
         new_user.set_password(data['password'])
-        return UserRepository.create(new_user), None
+        return self.user_repository.create(new_user)
 
-    @staticmethod
-    def update_user(user_id, current_user_id, data):
+    def update_user(self, user_id, current_user_id, data):
         if current_user_id != user_id:
-            return None, "Acesso negado. Você só pode alterar sua própria conta."
+            raise ForbiddenException("Acesso negado. Você só pode alterar sua própria conta.")
 
-        user = UserRepository.get_by_id(user_id)
-        if not user:
-            return None, "Usuário não encontrado."
+        user = self.get_by_id(user_id)
 
         if 'username' in data:
-            existing = UserRepository.get_by_username(data['username'])
+            existing = self.user_repository.get_by_username(data['username'])
             if existing and existing.id != user_id:
-                return None, "Este usuário já está em uso."
+                raise ConflictException("Este usuário já está em uso.")
             user.username = data['username']
 
         if 'email' in data:
-            existing = UserRepository.get_by_email(data['email'])
+            existing = self.user_repository.get_by_email(data['email'])
             if existing and existing.id != user_id:
-                return None, "Este e-mail já está em uso."
+                raise ConflictException("Este e-mail já está em uso.")
             user.email = data['email']
 
         if 'password' in data:
             user.set_password(data['password'])
 
-        UserRepository.update()
-        return user, None
+        self.user_repository.update()
+        return user
 
-    @staticmethod
-    def delete_user(user_id, current_user_id):
+    def delete_user(self, user_id, current_user_id):
         if current_user_id != user_id:
-            return False, "Acesso negado. Você só pode deletar sua própria conta."
+            raise ForbiddenException("Acesso negado. Você só pode deletar sua própria conta.")
 
-        user = UserRepository.get_by_id(user_id)
-        if not user:
-            return False, "Usuário não encontrado."
-
-        UserRepository.delete(user)
-        return True, None
+        user = self.get_by_id(user_id)
+        self.user_repository.delete(user)

@@ -1,12 +1,24 @@
 import json
 from app.utils.redis_client import redis_conn
-from app.repositories.product_repository import ProductRepository
+from app.port.product_repository_interface import IProductRepository
+from app.exceptions.exceptions import NotFoundException, ForbiddenException, ValidationException
 
 QUEUE_NAME = 'product_tasks'
 
 class ProductService:
-    @staticmethod
-    def enqueue_create(data, current_user_id):
+    def __init__(self, product_repository: IProductRepository):
+        self.product_repository = product_repository
+
+    def get_all(self):
+        return self.product_repository.get_all()
+
+    def get_by_id(self, product_id):
+        product = self.product_repository.get_by_id(product_id)
+        if not product:
+            raise NotFoundException("Produto não encontrado.")
+        return product
+
+    def enqueue_create(self, data, current_user_id):
         message = {
             "action": "create",
             "data": {
@@ -18,17 +30,15 @@ class ProductService:
         }
         redis_conn.rpush(QUEUE_NAME, json.dumps(message))
 
-    @staticmethod
-    def enqueue_update(product_id, data, current_user_id):
-        product = ProductRepository.get_by_id(product_id)
-        if not product:
-            return False, "Produto não encontrado."
+    def enqueue_update(self, product_id, data, current_user_id):
+        product = self.get_by_id(product_id)
+
         if product.user_id != current_user_id:
-            return False, "Acesso negado. Você só pode alterar seus próprios produtos."
+            raise ForbiddenException("Acesso negado. Você só pode alterar seus próprios produtos.")
 
         update_data = {k: v for k, v in data.items() if k in ['name', 'price', 'brand']}
         if not update_data:
-            return False, "Nenhum dado válido para atualizar."
+            raise ValidationException("Nenhum dado válido para atualizar.")
 
         if 'price' in update_data:
             update_data['price'] = float(update_data['price'])
@@ -39,19 +49,15 @@ class ProductService:
             "data": update_data
         }
         redis_conn.rpush(QUEUE_NAME, json.dumps(message))
-        return True, None
 
-    @staticmethod
-    def enqueue_delete(product_id, current_user_id):
-        product = ProductRepository.get_by_id(product_id)
-        if not product:
-            return False, "Produto não encontrado."
+    def enqueue_delete(self, product_id, current_user_id):
+        product = self.get_by_id(product_id)
+
         if product.user_id != current_user_id:
-            return False, "Acesso negado. Você só pode deletar seus próprios produtos."
+            raise ForbiddenException("Acesso negado. Você só pode deletar seus próprios produtos.")
 
         message = {
             "action": "delete",
             "product_id": product_id
         }
         redis_conn.rpush(QUEUE_NAME, json.dumps(message))
-        return True, None

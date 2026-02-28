@@ -1,8 +1,13 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt
+from app.repositories.user_repository import UserRepository
 from app.services.auth_service import AuthService
+from app.exceptions.exceptions import ValidationException
 
 auth_bp = Blueprint('auth_bp', __name__)
+
+user_repo = UserRepository()
+auth_service = AuthService(user_repository=user_repo)
 
 @auth_bp.route('/login', methods=['POST'])
 def login():
@@ -11,16 +16,13 @@ def login():
     password = data.get('password')
 
     if not login_input or not password:
-        return jsonify({"error": "Login (e-mail ou usuário) e senha são obrigatórios"}), 400
+        raise ValidationException("Login (e-mail ou usuário) e senha são obrigatórios")
 
-    result, error = AuthService.login(login_input, password)
-    if error:
-        return jsonify({"error": error}), 401
-
+    result = auth_service.login(login_input, password)
     return jsonify(result), 200
 
 @auth_bp.route('/logout', methods=['POST'])
 @jwt_required()
 def logout():
-    AuthService.logout(get_jwt()["jti"])
+    auth_service.logout(get_jwt()["jti"])
     return jsonify({"message": "Logout realizado com sucesso"}), 200
