@@ -1,16 +1,15 @@
 import json
 import time
-from app.app import create_app
-from app.utils.db import db
 from app.utils.redis_client import redis_conn
 from app.infrastructure.database.models.product_model import Product
-from app.infrastructure.repository.product_repository import ProductRepository
+from app.di.di import container
 
 QUEUE_NAME = 'product_tasks'
 
 def process_message(message_data):
     action = message_data.get('action')
-    product_repository = ProductRepository()
+
+    product_repository = container._product_repository
 
     try:
         if action == 'create':
@@ -56,28 +55,24 @@ def process_message(message_data):
             print(f"[WORKER - ERRO] Ação desconhecida: {action}")
 
     except Exception as e:
-        db.session.rollback()
         print(f"[WORKER - ERRO FATAL] Falha ao processar {action}: {str(e)}")
 
 
 def run_worker():
     print("[WORKER] Iniciando o processador de fila...")
-
     time.sleep(5)
 
-    app = create_app()
-    with app.app_context():
-        print("[WORKER] Conectado! Aguardando novas mensagens no Redis...")
-        while True:
-            try:
-                queue, message = redis_conn.blpop(QUEUE_NAME, timeout=0)
-                if message:
-                    message_data = json.loads(message)
-                    print(f"\n[WORKER] Processando ação: {message_data.get('action').upper()}...")
-                    process_message(message_data)
-            except Exception as e:
-                print(f"[WORKER - ERRO DE CONEXÃO] {str(e)}")
-                time.sleep(5)
+    print("[WORKER] Conectado! Aguardando novas mensagens no Redis...")
+    while True:
+        try:
+            queue, message = redis_conn.blpop(QUEUE_NAME, timeout=0)
+            if message:
+                message_data = json.loads(message)
+                print(f"\n[WORKER] Processando ação: {message_data.get('action').upper()}...")
+                process_message(message_data)
+        except Exception as e:
+            print(f"[WORKER - ERRO DE CONEXÃO] {str(e)}")
+            time.sleep(5)
 
 if __name__ == '__main__':
     run_worker()
