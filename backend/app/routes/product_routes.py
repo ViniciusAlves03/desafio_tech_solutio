@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.di.di import container
+from app.schemas.product_schema import product_schema, products_schema
 from app.exceptions.exceptions import ValidationException
 
 product_bp = Blueprint('product_bp', __name__)
@@ -10,7 +11,7 @@ product_service = container.get_product_service()
 @product_bp.route('/products', methods=['POST'])
 @jwt_required()
 def create_product():
-    data = request.get_json()
+    data = product_schema.load(request.get_json())
     if not data or not all(k in data for k in ('name', 'price', 'brand')):
         raise ValidationException("Dados incompletos. Informe 'name', 'price' e 'brand'.")
 
@@ -21,13 +22,13 @@ def create_product():
 @jwt_required()
 def get_products():
     products = product_service.get_all()
-    return jsonify([product.to_dict() for product in products]), 200
+    return jsonify(products_schema.dump(products)), 200
 
 @product_bp.route('/products/<int:id>', methods=['GET'])
 @jwt_required()
 def get_product(id):
     product = product_service.get_by_id(id)
-    return jsonify(product.to_dict()), 200
+    return jsonify(product_schema.dump(product)), 200
 
 @product_bp.route('/products/<int:id>', methods=['PUT', 'PATCH'])
 @jwt_required()
