@@ -1,13 +1,11 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt
-from app.repositories.user_repository import UserRepository
-from app.services.auth_service import AuthService
+from app.di.di import container
 from app.exceptions.exceptions import ValidationException
 
 auth_bp = Blueprint('auth_bp', __name__)
 
-user_repo = UserRepository()
-auth_service = AuthService(user_repository=user_repo)
+auth_service = container.get_auth_service()
 
 @auth_bp.route('/login', methods=['POST'])
 def login():

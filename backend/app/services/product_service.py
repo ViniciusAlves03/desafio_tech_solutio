@@ -1,11 +1,12 @@
 import json
 from app.utils.redis_client import redis_conn
 from app.port.product_repository_interface import IProductRepository
+from app.port.product_service_interface import IProductService
 from app.exceptions.exceptions import NotFoundException, ForbiddenException, ValidationException
 
 QUEUE_NAME = 'product_tasks'
 
-class ProductService:
+class ProductService(IProductService):
     def __init__(self, product_repository: IProductRepository):
         self.product_repository = product_repository
 

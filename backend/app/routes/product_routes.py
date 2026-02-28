@@ -1,13 +1,11 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from app.repositories.product_repository import ProductRepository
-from app.services.product_service import ProductService
+from app.di.di import container
 from app.exceptions.exceptions import ValidationException
 
 product_bp = Blueprint('product_bp', __name__)
 
-product_repo = ProductRepository()
-product_service = ProductService(product_repository=product_repo)
+product_service = container.get_product_service()
 
 @product_bp.route('/products', methods=['POST'])
 @jwt_required()

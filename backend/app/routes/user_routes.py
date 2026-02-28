@@ -1,13 +1,11 @@
 from flask import Blueprint, request, jsonify, url_for
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from app.repositories.user_repository import UserRepository
-from app.services.user_service import UserService
+from app.di.di import container
 from app.exceptions.exceptions import ValidationException
 
 user_bp = Blueprint('user_bp', __name__)
 
-user_repo = UserRepository()
-user_service = UserService(user_repository=user_repo)
+user_service = container.get_user_service()
 
 @user_bp.route('/users', methods=['POST'])
 def create_user():
