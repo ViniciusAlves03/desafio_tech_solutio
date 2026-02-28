@@ -1,25 +1,23 @@
-class APIException(Exception):
-    def __init__(self, message: str, status_code: int = 400):
+class Error(Exception):
+    def __init__(self, message: str, description: str = ""):
         super().__init__(message)
         self.message = message
-        self.status_code = status_code
+        self.description = description
 
-class ValidationException(APIException):
-    def __init__(self, message: str = "Dados inválidos ou incompletos."):
-        super().__init__(message, status_code=400)
+class AuthenticationError(Error):
+    pass
 
-class UnauthorizedException(APIException):
-    def __init__(self, message: str = "Credenciais incorretas ou acesso não autorizado."):
-        super().__init__(message, status_code=401)
+class ForbiddenError(Error):
+    pass
 
-class ForbiddenException(APIException):
-    def __init__(self, message: str = "Acesso negado. Permissão insuficiente."):
-        super().__init__(message, status_code=403)
+class ValidationError(Error):
+    pass
 
-class NotFoundException(APIException):
-    def __init__(self, message: str = "Recurso não encontrado."):
-        super().__init__(message, status_code=404)
+class NotFoundError(Error):
+    pass
 
-class ConflictException(APIException):
-    def __init__(self, message: str = "Conflito de dados. O recurso já existe."):
-        super().__init__(message, status_code=409)
+class ConflictError(Error):
+    pass
+
+class RepositoryError(Error):
+    pass

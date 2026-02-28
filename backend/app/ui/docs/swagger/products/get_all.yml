@@ -1,8 +1,31 @@
 tags:
   - Produtos
-summary: Lista todos os produtos
+summary: Lista todos os produtos com paginação e filtros
 security:
   - bearerAuth: []
+parameters:
+  - in: query
+    name: page
+    schema:
+      type: integer
+      default: 1
+    description: Número da página
+  - in: query
+    name: per_page
+    schema:
+      type: integer
+      default: 10
+    description: Quantidade de itens por página
+  - in: query
+    name: name
+    schema:
+      type: string
+    description: Filtrar por parte do nome (Case-insensitive)
+  - in: query
+    name: brand
+    schema:
+      type: string
+    description: Filtrar por marca (Case-insensitive)
 responses:
   200:
-    description: Lista de produtos carregada do banco.
+    description: Lista paginada de produtos retornada com sucesso.

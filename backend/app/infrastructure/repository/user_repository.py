@@ -2,7 +2,7 @@ from sqlalchemy.exc import IntegrityError
 from app.infrastructure.database.models.user_model import User
 from app.application.port.user_repository_interface import IUserRepository
 from app.infrastructure.database.postgres.connection_postgres import ConnectionPostgres
-from app.application.domain.exception.domain_exceptions import ConflictError, RepositoryError
+from app.application.domain.exception.exceptions import ConflictError, RepositoryError
 
 class UserRepository(IUserRepository):
     def __init__(self, db_connection: ConnectionPostgres):

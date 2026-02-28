@@ -1,7 +1,7 @@
 from app.infrastructure.database.models.product_model import Product
 from app.application.port.product_repository_interface import IProductRepository
 from app.infrastructure.database.postgres.connection_postgres import ConnectionPostgres
-from app.application.domain.exception.domain_exceptions import ConflictError, RepositoryError
+from app.application.domain.exception.exceptions import ConflictError, RepositoryError
 
 class ProductRepository(IProductRepository):
     def __init__(self, db_connection: ConnectionPostgres):
@@ -25,10 +25,20 @@ class ProductRepository(IProductRepository):
             except Exception as error:
                 raise RepositoryError("Erro ao buscar o produto por ID.", str(error))
 
-    def get_all(self) -> list[Product]:
+    def get_all(self, page: int = 1, per_page: int = 10, name: str = None, brand: str = None) -> tuple[list[Product], int]:
         with self.db.get_session() as session:
             try:
-                return session.query(Product).all()
+                query = session.query(Product)
+                if name:
+                    query = query.filter(Product.name.ilike(f"%{name}%"))
+                if brand:
+                    query = query.filter(Product.brand.ilike(f"%{brand}%"))
+
+                total = query.count()
+
+                products = query.offset((page - 1) * per_page).limit(per_page).all()
+
+                return products, total
             except Exception as error:
                 raise RepositoryError("Erro ao listar os produtos.", str(error))
 

@@ -11,7 +11,7 @@ class IProductRepository(ABC):
         pass
 
     @abstractmethod
-    def get_all(self) -> list[Product]:
+    def get_all(self, page: int, per_page: int, name: str = None, brand: str = None) -> tuple[list[Product], int]:
         pass
 
     @abstractmethod

@@ -3,7 +3,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from flasgger import swag_from
 from app.di.di import container
 from app.infrastructure.database.schemas.user_schema import user_schema, users_schema
-from app.application.domain.exception.api_exception_manager import APIExceptionManager
+from app.ui.exception.api_exception_manager import APIExceptionManager
 
 user_bp = Blueprint('user_bp', __name__)
 user_service = container.get_user_service()

@@ -1,7 +1,7 @@
 import json
 from app.utils.redis_client import redis_conn
 from app.application.port.product_repository_interface import IProductRepository
-from app.application.domain.exception.domain_exceptions import NotFoundError, ForbiddenError, ValidationError
+from app.application.domain.exception.exceptions import NotFoundError, ForbiddenError, ValidationError
 
 QUEUE_NAME = 'product_tasks'
 
@@ -9,9 +9,19 @@ class ProductService:
     def __init__(self, product_repository: IProductRepository):
         self.product_repository = product_repository
 
-    def get_all(self):
+    def get_all(self, page=1, per_page=10, name=None, brand=None):
         try:
-            return self.product_repository.get_all()
+            products, total = self.product_repository.get_all(page, per_page, name, brand)
+
+            total_pages = (total + per_page - 1) // per_page
+
+            return {
+                "items": products,
+                "total": total,
+                "page": page,
+                "per_page": per_page,
+                "total_pages": total_pages
+            }
         except Exception as error:
             raise error
 

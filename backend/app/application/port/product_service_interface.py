@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 class IProductService(ABC):
     @abstractmethod
-    def get_all(self):
+    def get_all(self, page: int = 1, per_page: int = 10, name: str = None, brand: str = None) -> dict:
         pass
 
     @abstractmethod

@@ -2,8 +2,8 @@ from flask import Blueprint, request, jsonify, make_response
 from flask_jwt_extended import jwt_required, get_jwt
 from flasgger import swag_from
 from app.di.di import container
-from app.application.domain.exception.api_exception_manager import APIExceptionManager
-from app.application.domain.exception.domain_exceptions import ValidationError
+from app.ui.exception.api_exception_manager import APIExceptionManager
+from app.application.domain.exception.exceptions import ValidationError
 
 auth_bp = Blueprint('auth_bp', __name__)
 auth_service = container.get_auth_service()

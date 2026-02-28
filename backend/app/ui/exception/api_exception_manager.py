@@ -1,5 +1,5 @@
 from http import HTTPStatus
-from .domain_exceptions import (
+from app.application.domain.exception.exceptions import (
     AuthenticationError, ConflictError, ForbiddenError,
     NotFoundError, RepositoryError, ValidationError
 )

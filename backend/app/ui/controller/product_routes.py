@@ -5,7 +5,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from flasgger import swag_from
 from app.di.di import container
 from app.infrastructure.database.schemas.product_schema import product_schema, products_schema
-from app.application.domain.exception.api_exception_manager import APIExceptionManager
+from app.ui.exception.api_exception_manager import APIExceptionManager
 
 product_bp = Blueprint('product_bp', __name__)
 product_service = container.get_product_service()
@@ -33,8 +33,23 @@ def create_product():
 @swag_from('../docs/swagger/products/get_all.yml')
 def get_products():
     try:
-        products = product_service.get_all()
-        return jsonify(products_schema.dump(products)), 200
+        page = request.args.get('page', 1, type=int)
+        per_page = request.args.get('per_page', 10, type=int)
+        name = request.args.get('name', type=str)
+        brand = request.args.get('brand', type=str)
+
+        result = product_service.get_all(page, per_page, name, brand)
+
+        response_data = {
+            "items": products_schema.dump(result["items"]),
+            "metadata": {
+                "total": result["total"],
+                "page": result["page"],
+                "per_page": result["per_page"],
+                "total_pages": result["total_pages"]
+            }
+        }
+        return jsonify(response_data), 200
     except Exception as error:
         api_error = APIExceptionManager.build(error)
         return make_response(jsonify(api_error.toJSON()), api_error.code)
