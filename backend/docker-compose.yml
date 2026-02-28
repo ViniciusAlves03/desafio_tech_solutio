@@ -24,7 +24,7 @@ services:
   redis:
     image: redis:7.4-alpine
     container_name: product_redis
-    # command: redis-server --save 20 1 --loglevel warning
+    command: redis-server --save 20 1 # --loglevel warning
     ports:
       - "${REDIS_PORT}:6379"
     volumes:
@@ -52,20 +52,20 @@ services:
     ports:
     - "5000:5000"
 
-  # worker:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   container_name: flask_worker
-  #   command: python worker.py
-  #   depends_on:
-  #     postgres:
-  #       condition: service_healthy
-  #   environment:
-  #     DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
-  #     REDIS_URL: redis://redis:6379/0
-  #   networks:
-  #     - app_network
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: flask_worker
+    command: python worker.py
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      REDIS_URL: redis://redis:6379/0
+    networks:
+      - app_network
 
 networks:
   app_network:
