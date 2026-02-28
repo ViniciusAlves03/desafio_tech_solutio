@@ -1,7 +1,8 @@
 from app.models.user_model import User
 from app.utils.db import db
+from app.port.user_repository_interface import IUserRepository
 
-class UserRepository:
+class UserRepository(IUserRepository):
     @staticmethod
     def create(user: User) -> User:
         db.session.add(user)

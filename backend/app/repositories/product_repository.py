@@ -1,7 +1,8 @@
 from app.models.product_model import Product
 from app.utils.db import db
+from app.port.product_repository_interface import IProductRepository
 
-class ProductRepository:
+class ProductRepository(IProductRepository):
     @staticmethod
     def create(product: Product) -> Product:
         db.session.add(product)
