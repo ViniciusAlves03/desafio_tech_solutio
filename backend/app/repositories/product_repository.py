@@ -1,27 +1,42 @@
-from app.models.product_model import Product
 from app.utils.db import db
 from app.port.product_repository_interface import IProductRepository
+from app.exceptions.domain_exceptions import ConflictError, RepositoryError
+from app.models.product_model import Product
 
 class ProductRepository(IProductRepository):
-    @staticmethod
-    def create(product: Product) -> Product:
-        db.session.add(product)
-        db.session.commit()
-        return product
 
-    @staticmethod
-    def get_by_id(product_id: int) -> Product:
-        return Product.query.get(product_id)
+    def create(self, product):
+        try:
+            db.session.add(product)
+            db.session.commit()
+            return product
+        except Exception as error:
+            db.session.rollback()
+            raise RepositoryError("Erro ao salvar o produto no banco de dados.", str(error))
 
-    @staticmethod
-    def get_all() -> list[Product]:
-        return Product.query.all()
+    def get_by_id(self, product_id: int):
+        try:
+            return Product.query.get(product_id)
+        except Exception as error:
+            raise RepositoryError("Erro ao buscar o produto por ID.", str(error))
 
-    @staticmethod
-    def update() -> None:
-        db.session.commit()
+    def get_all(self):
+        try:
+            return Product.query.all()
+        except Exception as error:
+            raise RepositoryError("Erro ao listar os produtos.", str(error))
 
-    @staticmethod
-    def delete(product: Product) -> None:
-        db.session.delete(product)
-        db.session.commit()
+    def update(self):
+        try:
+            db.session.commit()
+        except Exception as error:
+            db.session.rollback()
+            raise RepositoryError("Erro ao atualizar o produto no banco de dados.", str(error))
+
+    def delete(self, product):
+        try:
+            db.session.delete(product)
+            db.session.commit()
+        except Exception as error:
+            db.session.rollback()
+            raise RepositoryError("Erro ao deletar o produto no banco de dados.", str(error))

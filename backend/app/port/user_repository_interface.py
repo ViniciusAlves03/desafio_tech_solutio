@@ -23,6 +23,10 @@ class IUserRepository(ABC):
         pass
 
     @abstractmethod
+    def get_by_login_input(self, login_input: str) -> User:
+        pass
+
+    @abstractmethod
     def update(self) -> None:
         pass
 
