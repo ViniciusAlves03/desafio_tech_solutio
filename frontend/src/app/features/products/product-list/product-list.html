@@ -1,12 +1,8 @@
 <div class="container">
-  <header>
-    <h1>Gestão de Produtos</h1>
-    <button class="btn-logout" (click)='logout()'>Sair</button>
-  </header>
-
-  <div class="actions">
+ <header class="page-header">
+    <h1>Lista de Produtos</h1>
     <button class="btn-add" routerLink="/products/new">Novo Produto</button>
-  </div>
+  </header>
 
   <div class="filter-bar">
     <input type="text" [(ngModel)]="filterName" (keyup.enter)="onSearch()" placeholder="Filtrar por nome">

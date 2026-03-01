@@ -1,23 +1,30 @@
 <div class="form-container">
   <div class="form-card">
     <h2>{{ isEditMode ? 'Editar Produto' : 'Novo Produto' }}</h2>
-    <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
 
+    <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
       <div class="form-group">
         <label>Nome</label>
-        <input type="text" formControlName="name" placeholder="Ex: Teclado Mecânico">
+        <input type="text" formControlName="name" placeholder="Ex: Teclado Mecânico"
+               [class.invalid]="productForm.get('name')?.invalid && productForm.get('name')?.touched">
+        <div class="validation-error" *ngIf="productForm.get('name')?.invalid && productForm.get('name')?.touched">
+          <small *ngIf="productForm.get('name')?.errors?.['required']">O nome é obrigatório.</small>
+          <small *ngIf="productForm.get('name')?.errors?.['minlength']">Mínimo de 2 caracteres.</small>
+        </div>
       </div>
 
       <div class="form-group">
         <label>Marca</label>
-        <input type="text" formControlName="brand" placeholder="Ex: Razer">
+        <input type="text" formControlName="brand" placeholder="Ex: Razer"
+               [class.invalid]="productForm.get('brand')?.invalid && productForm.get('brand')?.touched">
       </div>
 
       <div class="form-row">
         <div class="form-group">
-          <label>Preço</label>
+          <label>Preço (R$)</label>
           <input type="number" formControlName="price" step="0.01">
         </div>
+
         <div class="form-group">
           <label>Quantidade</label>
           <input type="number" formControlName="quantity">
@@ -25,14 +32,15 @@
       </div>
 
       <div class="form-group">
-        <label>Imagem (Opcional)</label>
+        <label>Imagem do Produto (Opcional)</label>
         <input type="file" (change)="onFileSelected($event)" accept="image/*">
       </div>
 
-      <div class="actions">
+      <div class="form-actions">
         <button type="button" class="btn-cancel" routerLink="/products">Cancelar</button>
         <button type="submit" class="btn-save" [disabled]="productForm.invalid || isLoading">
-          {{ isLoading ? 'A processar...' : 'Salvar' }}
+          <span *ngIf="!isLoading">{{ isEditMode ? 'Atualizar' : 'Salvar Produto' }}</span>
+          <span *ngIf="isLoading">Processando...</span>
         </button>
       </div>
     </form>

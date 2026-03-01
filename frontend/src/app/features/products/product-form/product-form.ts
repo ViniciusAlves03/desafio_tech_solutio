@@ -44,20 +44,29 @@ export class ProductFormComponent implements OnInit {
   }
 
   loadProductData(id: number): void {
-    this.productService.getProducts().subscribe(response => {
-      const product = response.items.find((p: any) => p.id === id);
-      if (product) {
-        this.productForm.patchValue(product);
-      }
+    this.productService.getProducts().subscribe({
+      next: (response) => {
+        const product = response.items.find((p: any) => p.id === id);
+        if (product) {
+          this.productForm.patchValue(product);
+        }
+      },
+      error: () => this.notify.show('Erro ao carregar dados do produto.', 'error')
     });
   }
 
   onFileSelected(event: any): void {
-    this.selectedFile = event.target.files[0] as File;
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+    }
   }
 
   onSubmit(): void {
-    if (this.productForm.invalid) return;
+    if (this.productForm.invalid) {
+      this.productForm.markAllAsTouched();
+      return;
+    }
 
     this.isLoading = true;
     const formData = new FormData();
@@ -78,13 +87,11 @@ export class ProductFormComponent implements OnInit {
       next: (response: any) => {
         const msg = response?.message || 'Operação realizada com sucesso.';
         this.notify.translateAndShow(msg, 'success');
-        setTimeout(() => {
-          this.router.navigate(['/products']);
-        }, 1000);
+        setTimeout(() => this.router.navigate(['/products']), 1500);
       },
       error: (err) => {
         this.isLoading = false;
-        const rawMsg = err.error?.message || 'Error saving product to database.';
+        const rawMsg = err.error?.message || 'Erro ao processar produto.';
         this.notify.translateAndShow(rawMsg, 'error');
       }
     });
