@@ -12,7 +12,7 @@ class IProductRepository(ABC):
         pass
 
     @abstractmethod
-    def get_all(self, page: int, per_page: int, name: str = None, brand: str = None) -> tuple[list[Product], int]:
+    def get_all(self, page=1, per_page=10, name=None, brand=None, sort_by="id", sort_order="asc"):
         pass
 
     @abstractmethod

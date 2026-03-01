@@ -18,15 +18,20 @@ class TestProductController:
 
         mock_result = {
             "items": [fake_product],
-            "total": 1, "page": 1, "per_page": 10, "total_pages": 1
+            "total": 1, "page": 1, "per_page": 10, "total_pages": 1,
+            "sort_by": "name", "sort_order": "desc"
         }
         mocker.patch.object(product_service, 'get_all', return_value=mock_result)
 
-        response = client.get('/v1/products?page=1&per_page=10', headers=auth_headers)
+        response = client.get('/v1/products?page=1&per_page=10&sort_by=name&sort_order=desc', headers=auth_headers)
 
         assert response.status_code == 200
         assert response.get_json()["metadata"]["total"] == 1
         assert len(response.get_json()["items"]) == 1
+
+        product_service.get_all.assert_called_once_with(
+            1, 10, None, None, "name", "desc"
+        )
 
     def test_get_product_by_id(self, client, auth_headers, mocker, fake_product):
         mocker.patch('app.app.redis_conn.get', return_value=None)

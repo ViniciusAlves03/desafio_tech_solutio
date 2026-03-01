@@ -11,9 +11,9 @@ class ProductService:
     def __init__(self, product_repository: IProductRepository):
         self.product_repository = product_repository
 
-    def get_all(self, page=1, per_page=10, name=None, brand=None):
+    def get_all(self, page: int = 1, per_page: int = 10, name: str = None, brand: str = None, sort_by: str = "id", sort_order: str = "asc"):
         try:
-            products, total = self.product_repository.get_all(page, per_page, name, brand)
+            products, total = self.product_repository.get_all(page, per_page, name, brand, sort_by, sort_order)
 
             total_pages = (total + per_page - 1) // per_page
 
@@ -22,7 +22,9 @@ class ProductService:
                 "total": total,
                 "page": page,
                 "per_page": per_page,
-                "total_pages": total_pages
+                "total_pages": total_pages,
+                "sort_by": sort_by,
+                "sort_order": sort_order
             }
         except Exception as error:
             raise error

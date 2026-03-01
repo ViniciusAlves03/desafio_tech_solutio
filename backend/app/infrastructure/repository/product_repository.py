@@ -26,17 +26,29 @@ class ProductRepository(IProductRepository):
             except Exception as error:
                 raise RepositoryError(Messages.Repository.ERR_GET_PRODUCT_ID, str(error))
 
-    def get_all(self, page: int = 1, per_page: int = 10, name: str = None, brand: str = None) -> tuple[list[Product], int]:
+    def get_all(self, page: int = 1, per_page: int = 10, name: str = None,
+            brand: str = None, sort_by: str = "id", sort_order: str = "asc") -> tuple[list[Product], int]:
         with self.db.get_session() as session:
             try:
                 query = session.query(Product)
+
                 if name:
                     query = query.filter(Product.name.ilike(f"%{name}%"))
                 if brand:
                     query = query.filter(Product.brand.ilike(f"%{brand}%"))
 
-                total = query.count()
+                sort_columns = {
+                    "id": Product.id,
+                    "name": Product.name
+                }
+                column = sort_columns.get(sort_by, Product.id)
 
+                if sort_order.lower() == "desc":
+                    query = query.order_by(column.desc())
+                else:
+                    query = query.order_by(column.asc())
+
+                total = query.count()
                 products = query.offset((page - 1) * per_page).limit(per_page).all()
 
                 return products, total

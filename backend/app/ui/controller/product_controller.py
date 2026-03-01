@@ -38,8 +38,10 @@ def get_products():
         per_page = request.args.get('per_page', 10, type=int)
         name = request.args.get('name', type=str)
         brand = request.args.get('brand', type=str)
+        sort_by = request.args.get('sort_by', 'id', type=str)
+        sort_order = request.args.get('sort_order', 'asc', type=str)
 
-        result = product_service.get_all(page, per_page, name, brand)
+        result = product_service.get_all(page, per_page, name, brand, sort_by, sort_order)
 
         response_data = {
             "items": products_schema.dump(result["items"]),

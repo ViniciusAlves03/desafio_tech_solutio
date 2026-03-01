@@ -26,6 +26,16 @@ parameters:
     schema:
       type: string
     description: Filter by brand
+  - name: sort_by
+    in: query
+    type: string
+    description: "Coluna para ordenação (id ou name)"
+    default: "id"
+  - name: sort_order
+    in: query
+    type: string
+    description: "Ordem da listagem (asc ou desc)"
+    default: "asc"
 responses:
   200:
     description: Paginated list of products returned successfully.
