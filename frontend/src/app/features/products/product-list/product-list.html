@@ -8,6 +8,14 @@
     <button class="btn-add" routerLink="/products/new">Novo Produto</button>
   </div>
 
+  <div class="filter-bar">
+    <input type="text" [(ngModel)]="filterName" (keyup.enter)="onSearch()" placeholder="Filtrar por nome">
+
+    <input type="text" [(ngModel)]="filterBrand" (keyup.enter)="onSearch()" placeholder="Filtrar por marca">
+
+    <button class="btn-search" (click)="onSearch()">Buscar</button>
+  </div>
+
   <table class="product-table">
     <thead>
       <tr>
@@ -32,4 +40,17 @@
       </tr>
     </tbody>
   </table>
+  <div class="pagination-container" *ngIf="totalPages > 0">
+    <button class="btn-pagination" (click)="goToPreviousPage()" [disabled]="currentPage === 1">
+      Anterior
+    </button>
+
+    <span class="page-info">
+      Página {{ currentPage }} de {{ totalPages }}
+    </span>
+
+    <button class="btn-pagination" (click)="goToNextPage()" [disabled]="currentPage === totalPages || totalPages === 0">
+      Próxima
+    </button>
+  </div>
 </div>
