@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ProductService } from '../../../core/services/product';
+import { NotificationService } from '../../../core/services/notification';
 
 @Component({
   selector: 'app-product-form',
@@ -22,6 +23,7 @@ export class ProductFormComponent implements OnInit {
   private productService = inject(ProductService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private notify = inject(NotificationService);
 
   constructor() {
     this.productForm = this.fb.group({
@@ -69,18 +71,19 @@ export class ProductFormComponent implements OnInit {
     }
 
     const request = this.isEditMode && this.productId
-      ? this.productService.updateProduct(this.productId, formData)
-      : this.productService.createProduct(formData);
+    ? this.productService.updateProduct(this.productId, formData)
+    : this.productService.createProduct(formData);
 
-    request.subscribe({
-      next: () => {
-        alert('Operação enfileirada com sucesso!');
-        this.router.navigate(['/products']);
-      },
-      error: (err) => {
-        this.isLoading = false;
-        console.error('Erro ao processar produto', err);
-      }
-    });
-  }
+  request.subscribe({
+    next: () => {
+      this.notify.show('Produto enviado para processamento!', 'success');
+      this.router.navigate(['/products']);
+    },
+    error: (err) => {
+      this.isLoading = false;
+      this.notify.show('Erro ao salvar produto. Tente novamente.', 'error');
+      console.error('Erro ao processar produto', err);
+    }
+  });
+}
 }

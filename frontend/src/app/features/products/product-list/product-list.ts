@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { ProductService } from '../../../core/services/product';
 import { AuthService } from '../../../core/services/auth';
 import { Router } from '@angular/router';
+import { NotificationService } from '../../../core/services/notification';
 
 @Component({
   selector: 'app-product-list',
@@ -17,6 +18,7 @@ export class ProductListComponent implements OnInit {
   private productService = inject(ProductService);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private notify = inject(NotificationService);
 
   ngOnInit(): void {
     this.loadProducts();
@@ -35,23 +37,26 @@ export class ProductListComponent implements OnInit {
     if (confirm('Tem certeza que deseja eliminar este produto?')) {
       this.productService.deleteProduct(id).subscribe({
         next: () => {
-          alert('Eliminação enfileirada com sucesso!');
+          this.notify.show('Pedido de exclusão enviado para a fila.', 'success');
           this.loadProducts();
+        },
+        error: () => {
+          this.notify.show('Não foi possível excluir o produto.', 'error');
         }
       });
     }
   }
 
   logout(): void {
-  this.authService.logout().subscribe({
-    next: () => {
-      this.authService.removeToken();
-      this.router.navigate(['/login']);
-    },
-    error: () => {
-      this.authService.removeToken();
-      this.router.navigate(['/login']);
-    }
-  });
-}
+    this.authService.logout().subscribe({
+      next: () => {
+        this.authService.removeToken();
+        this.router.navigate(['/login']);
+      },
+      error: () => {
+        this.authService.removeToken();
+        this.router.navigate(['/login']);
+      }
+    });
+  }
 }
