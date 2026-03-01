@@ -24,15 +24,15 @@ def create_app():
     jwt.init_app(app)
 
     app.config['SWAGGER'] = {
-        'title': 'API de Produtos - Desafio Técnico',
+        'title': 'Products API - Technical Challenge',
         'openapi': '3.0.0',
         'uiversion': 3
     }
 
     swagger_template = {
         "info": {
-            "title": "API de Produtos (Clean Architecture)",
-            "description": "Documentação interativa da API com filas no Redis e PostgreSQL.",
+            "title": "Products API",
+            "description": "Interactive API documentation with Redis queues and PostgreSQL.",
             "version": "1.0.0"
         },
         "components": {
@@ -41,7 +41,7 @@ def create_app():
                     "type": "http",
                     "scheme": "bearer",
                     "bearerFormat": "JWT",
-                    "description": "Insira o token JWT aqui (sem o prefixo Bearer)."
+                    "description": "Enter the JWT token here (without the Bearer prefix)."
                 }
             }
         }

@@ -1,6 +1,6 @@
 tags:
-  - Usuários
-summary: Elimina a conta do utilizador
+  - Users
+summary: Deletes the user account
 security:
   - bearerAuth: []
 parameters:
@@ -9,9 +9,9 @@ parameters:
     schema:
       type: integer
     required: true
-    description: ID do utilizador
+    description: User ID
 responses:
   204:
-    description: Utilizador eliminado com sucesso (Sem conteúdo).
+    description: User deleted successfully (No content).
   403:
-    description: Acesso negado.
+    description: Access denied.

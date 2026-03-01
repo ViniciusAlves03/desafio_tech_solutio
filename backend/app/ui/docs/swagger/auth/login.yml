@@ -1,6 +1,6 @@
 tags:
-  - Autenticação
-summary: Autentica o utilizador e retorna o Token JWT
+  - Authentication
+summary: Authenticates the user and returns the JWT Token
 requestBody:
   required: true
   content:
@@ -13,11 +13,11 @@ requestBody:
             example: admin@email.com
           password:
             type: string
-            example: senha_segura123
+            example: secure_password123
 responses:
   200:
-    description: Sucesso. Retorna o token de acesso.
+    description: Success. Returns the access token.
   400:
-    description: Dados de entrada inválidos.
+    description: Invalid input data.
   401:
-    description: Credenciais incorretas ou não autorizadas.
+    description: Incorrect credentials or unauthorized.

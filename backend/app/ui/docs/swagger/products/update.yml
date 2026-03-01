@@ -1,7 +1,7 @@
 tags:
-  - Produtos
-summary: Enfileira a atualização de um produto
-description: Pode alterar texto ou enviar uma nova imagem.
+  - Products
+summary: Enqueues the update of a product
+description: You can alter text fields or send a new image.
 security:
   - bearerAuth: []
 parameters:
@@ -24,6 +24,6 @@ requestBody:
             format: binary
 responses:
   202:
-    description: Atualização enfileirada com sucesso.
+    description: Update enqueued successfully.
   403:
-    description: Sem permissão (produto pertence a outro).
+    description: Access denied (product belongs to another user).

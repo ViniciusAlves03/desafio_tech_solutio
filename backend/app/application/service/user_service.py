@@ -1,6 +1,7 @@
 from app.infrastructure.database.models.user_model import User
 from app.application.port.user_repository_interface import IUserRepository
 from app.application.domain.exception.exceptions import NotFoundError, ForbiddenError, ConflictError
+from app.utils.messages import Messages
 
 class UserService:
     def __init__(self, user_repository: IUserRepository):
@@ -16,7 +17,7 @@ class UserService:
         try:
             user = self.user_repository.get_by_id(user_id)
             if not user:
-                raise NotFoundError("Usuário não encontrado.", f"ID: {user_id}")
+                raise NotFoundError(Messages.User.NOT_FOUND_TITLE, Messages.User.NOT_FOUND_DESC.format(user_id))
             return user
         except Exception as error:
             raise error
@@ -24,9 +25,9 @@ class UserService:
     def create_user(self, data):
         try:
             if self.user_repository.get_by_email(data['email']):
-                raise ConflictError("Este e-mail já está cadastrado.")
+                raise ConflictError(Messages.User.EMAIL_CONFLICT)
             if self.user_repository.get_by_username(data['username']):
-                raise ConflictError("Este nome de usuário já está em uso.")
+                raise ConflictError(Messages.User.USERNAME_CONFLICT)
 
             new_user = User(username=data['username'], email=data['email'])
             new_user.set_password(data['password'])
@@ -38,20 +39,20 @@ class UserService:
     def update_user(self, user_id, current_user_id, data):
         try:
             if current_user_id != user_id:
-                raise ForbiddenError("Acesso negado. Você só pode alterar sua própria conta.")
+                raise ForbiddenError(Messages.User.FORBIDDEN_UPDATE)
 
             user = self.get_by_id(user_id)
 
             if 'username' in data:
                 existing = self.user_repository.get_by_username(data['username'])
                 if existing and existing.id != user_id:
-                    raise ConflictError("Este usuário já está em uso.")
+                    raise ConflictError(Messages.User.USERNAME_CONFLICT)
                 user.username = data['username']
 
             if 'email' in data:
                 existing = self.user_repository.get_by_email(data['email'])
                 if existing and existing.id != user_id:
-                    raise ConflictError("Este e-mail já está em uso.")
+                    raise ConflictError(Messages.User.EMAIL_CONFLICT)
                 user.email = data['email']
 
             if 'password' in data:
@@ -65,7 +66,7 @@ class UserService:
     def delete_user(self, user_id, current_user_id):
         try:
             if current_user_id != user_id:
-                raise ForbiddenError("Acesso negado. Você só pode deletar sua própria conta.")
+                raise ForbiddenError(Messages.User.FORBIDDEN_DELETE)
 
             user = self.get_by_id(user_id)
             self.user_repository.delete(user)

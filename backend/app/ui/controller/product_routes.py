@@ -23,7 +23,7 @@ def create_product():
             valid_data['image_mime_type'] = image_file.mimetype
 
         product_service.enqueue_create(valid_data, int(get_jwt_identity()))
-        return jsonify({"message": "Criação de produto enfileirada com sucesso."}), 202
+        return jsonify({"message": "Product creation queued successfully."}), 202
     except Exception as error:
         api_error = APIExceptionManager.build(error)
         return make_response(jsonify(api_error.toJSON()), api_error.code)
@@ -79,7 +79,7 @@ def update_product(id):
             valid_data['image_mime_type'] = image_file.mimetype
 
         product_service.enqueue_update(id, valid_data, int(get_jwt_identity()))
-        return jsonify({"message": "Atualização de produto enfileirada com sucesso."}), 202
+        return jsonify({"message": "Product update queued successfully."}), 202
     except Exception as error:
         api_error = APIExceptionManager.build(error)
         return make_response(jsonify(api_error.toJSON()), api_error.code)
@@ -90,7 +90,7 @@ def update_product(id):
 def delete_product(id):
     try:
         product_service.enqueue_delete(id, int(get_jwt_identity()))
-        return jsonify({"message": "Exclusão de produto enfileirada com sucesso."}), 202
+        return jsonify({"message": "Product deletion queued successfully."}), 202
     except Exception as error:
         api_error = APIExceptionManager.build(error)
         return make_response(jsonify(api_error.toJSON()), api_error.code)
@@ -102,7 +102,7 @@ def get_product_image(id):
     try:
         product = product_service.get_by_id(id)
         if not product or not product.image_data:
-            return jsonify({"message": "Imagem não encontrada."}), 404
+            return jsonify({"message": "Image not found."}), 404
 
         return send_file(
             io.BytesIO(product.image_data),

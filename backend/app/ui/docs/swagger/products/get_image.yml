@@ -1,7 +1,7 @@
 tags:
-  - Produtos
-summary: Retorna a imagem do produto
-description: Retorna o binário da imagem guardada na base de dados. Esta rota é privada e exige autenticação.
+  - Products
+summary: Returns the product image
+description: Returns the binary image stored in the database. This route is private and requires authentication.
 security:
   - bearerAuth: []
 parameters:
@@ -10,11 +10,11 @@ parameters:
     schema:
       type: integer
     required: true
-    description: ID do produto
+    description: Product ID
 responses:
   200:
-    description: Ficheiro de imagem retornado com sucesso.
+    description: Image file returned successfully.
   401:
-    description: Acesso não autorizado (Token JWT inválido ou em falta).
+    description: Unauthorized access (Missing or invalid JWT token).
   404:
-    description: Produto não encontrado ou não possui imagem.
+    description: Product not found or has no image.

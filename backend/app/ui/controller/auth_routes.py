@@ -4,6 +4,7 @@ from flasgger import swag_from
 from app.di.di import container
 from app.ui.exception.api_exception_manager import APIExceptionManager
 from app.application.domain.exception.exceptions import ValidationError
+from app.utils.messages import Messages
 
 auth_bp = Blueprint('auth_bp', __name__)
 auth_service = container.get_auth_service()
@@ -17,7 +18,7 @@ def login():
         password = data.get('password')
 
         if not login_input or not password:
-            raise ValidationError("Login (e-mail ou usuário) e senha são obrigatórios.")
+            raise ValidationError(Messages.Validation.MISSING_LOGIN_CREDS)
 
         result = auth_service.login(login_input, password)
         return jsonify(result), 200
@@ -31,7 +32,7 @@ def login():
 def logout():
     try:
         auth_service.logout(get_jwt()["jti"])
-        return jsonify({"message": "Logout realizado com sucesso."}), 200
+        return jsonify({"message": "Logged out successfully."}), 200
     except Exception as error:
         api_error = APIExceptionManager.build(error)
         return make_response(jsonify(api_error.toJSON()), api_error.code)

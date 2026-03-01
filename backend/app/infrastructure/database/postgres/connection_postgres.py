@@ -17,7 +17,7 @@ class ConnectionPostgres:
     def __get_engine(self):
         database_url = os.getenv("DATABASE_URL")
         if not database_url:
-            raise ValueError("DATABASE_URL não configurada no .env")
+            raise ValueError("DATABASE_URL not configured in .env")
 
         return create_engine(database_url, pool_pre_ping=True)
 

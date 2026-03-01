@@ -1,7 +1,7 @@
 tags:
-  - Produtos
-summary: Enfileira a criação de um novo produto com imagem
-description: Operação assíncrona. Os dados são enviados para a fila do Redis e processados pelo Worker.
+  - Products
+summary: Enqueues the creation of a new product with an image
+description: Asynchronous operation. Data is sent to the Redis queue and processed by the Worker.
 security:
   - bearerAuth: []
 requestBody:
@@ -14,7 +14,7 @@ requestBody:
         properties:
           name:
             type: string
-            example: Teclado Mecânico
+            example: Mechanical Keyboard
           price:
             type: number
             example: 250.50
@@ -27,11 +27,11 @@ requestBody:
           image:
             type: string
             format: binary
-            description: Ficheiro JPG/PNG (Opcional)
+            description: JPG/PNG File (Optional)
 responses:
   202:
-    description: Produto enfileirado para criação.
+    description: Product enqueued for creation.
   400:
-    description: Erro de validação.
+    description: Validation error.
   401:
-    description: Não autorizado.
+    description: Unauthorized.

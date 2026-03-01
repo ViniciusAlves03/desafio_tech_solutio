@@ -1,6 +1,6 @@
 tags:
-  - Usuários
-summary: Busca um utilizador pelo ID
+  - Users
+summary: Fetches a user by ID
 security:
   - bearerAuth: []
 parameters:
@@ -9,9 +9,9 @@ parameters:
     schema:
       type: integer
     required: true
-    description: ID numérico do utilizador
+    description: Numeric ID of the user
 responses:
   200:
-    description: Dados do utilizador encontrados.
+    description: User data found.
   404:
-    description: Utilizador não encontrado.
+    description: User not found.

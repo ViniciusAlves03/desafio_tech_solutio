@@ -1,6 +1,6 @@
 tags:
-  - Produtos
-summary: Busca um produto pelo ID
+  - Products
+summary: Fetches a product by ID
 security:
   - bearerAuth: []
 parameters:
@@ -11,6 +11,6 @@ parameters:
     required: true
 responses:
   200:
-    description: Produto encontrado.
+    description: Product found.
   404:
-    description: Produto não encontrado.
+    description: Product not found.

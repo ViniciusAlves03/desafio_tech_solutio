@@ -4,13 +4,14 @@ from app.application.domain.exception.exceptions import (
     NotFoundError, RepositoryError, ValidationError
 )
 from .api_error import APIError
+from app.utils.messages import Messages
 
 class APIExceptionManager:
     @staticmethod
     def build(err: Exception) -> APIError:
         if type(err).__name__ == "ValidationError":
             msg = getattr(err, "messages", str(err))
-            return APIError(HTTPStatus.BAD_REQUEST, "Dados inválidos", str(msg))
+            return APIError(HTTPStatus.BAD_REQUEST, Messages.Validation.INVALID_DATA, str(msg))
 
         if isinstance(err, AuthenticationError):
             return APIError(HTTPStatus.UNAUTHORIZED, err.message, err.description)
@@ -25,4 +26,4 @@ class APIExceptionManager:
         if isinstance(err, RepositoryError):
             return APIError(HTTPStatus.INTERNAL_SERVER_ERROR, err.message, err.description)
 
-        return APIError(HTTPStatus.INTERNAL_SERVER_ERROR, "Erro Interno no Servidor", str(err))
+        return APIError(HTTPStatus.INTERNAL_SERVER_ERROR, Messages.Generic.INTERNAL_ERROR, str(err))

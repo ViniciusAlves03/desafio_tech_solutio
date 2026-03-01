@@ -1,10 +1,10 @@
 tags:
-  - Usuários
-summary: Lista todos os utilizadores
+  - Users
+summary: Lists all users
 security:
   - bearerAuth: []
 responses:
   200:
-    description: Lista de utilizadores retornada com sucesso.
+    description: List of users returned successfully.
   401:
-    description: Acesso não autorizado.
+    description: Unauthorized access.

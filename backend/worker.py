@@ -28,7 +28,7 @@ def process_message(message_data):
                 new_product.image_mime_type = data.get('image_mime_type')
 
             product_repository.create(new_product)
-            print(f"[WORKER] Sucesso: Produto '{data['name']}' criado com imagem!")
+            print(f"[WORKER] Success: Product '{data['name']}' created")
 
         elif action == 'update':
             product_id = message_data.get('product_id')
@@ -46,9 +46,9 @@ def process_message(message_data):
                     product.image_mime_type = data.get('image_mime_type')
 
                 product_repository.update(product)
-                print(f"[WORKER] Sucesso: Produto ID {product_id} atualizado!")
+                print(f"[WORKER] Success: Product ID {product_id} updated!")
             else:
-                print(f"[WORKER - AVISO] Produto ID {product_id} não encontrado para atualização.")
+                print(f"[WORKER - WARNING] Product ID {product_id} not found for update.")
 
         elif action == 'delete':
             product_id = message_data.get('product_id')
@@ -56,31 +56,31 @@ def process_message(message_data):
             product = product_repository.get_by_id(product_id)
             if product:
                 product_repository.delete(product)
-                print(f"[WORKER] Sucesso: Produto ID {product_id} deletado!")
+                print(f"[WORKER] Success: Product ID {product_id} deleted!")
             else:
-                print(f"[WORKER - AVISO] Produto ID {product_id} não encontrado para exclusão.")
+                print(f"[WORKER - WARNING] Product ID {product_id} not found for deletion.")
 
         else:
-            print(f"[WORKER - ERRO] Ação desconhecida: {action}")
+            print(f"[WORKER - ERROR] Unknown action: {action}")
 
     except Exception as e:
-        print(f"[WORKER - ERRO FATAL] Falha ao processar {action}: {str(e)}")
+        print(f"[WORKER - FATAL ERROR] Failed to process {action}: {str(e)}")
 
 
 def run_worker():
-    print("[WORKER] Iniciando o processador de fila...")
+    print("[WORKER] Starting queue processor")
     time.sleep(5)
 
-    print("[WORKER] Conectado! Aguardando novas mensagens no Redis...")
+    print("[WORKER] Connected! Waiting for new messages in Redis")
     while True:
         try:
             queue, message = redis_conn.blpop(QUEUE_NAME, timeout=0)
             if message:
                 message_data = json.loads(message)
-                print(f"\n[WORKER] Processando ação: {message_data.get('action').upper()}...")
+                print(f"\n[WORKER] Processing action: {message_data.get('action').upper()}...")
                 process_message(message_data)
         except Exception as e:
-            print(f"[WORKER - ERRO DE CONEXÃO] {str(e)}")
+            print(f"[WORKER - CONNECTION ERROR] {str(e)}")
             time.sleep(5)
 
 if __name__ == '__main__':

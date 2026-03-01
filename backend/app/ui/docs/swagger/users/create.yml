@@ -1,6 +1,6 @@
 tags:
-  - Usuários
-summary: Cria um novo usuário (Registo)
+  - Users
+summary: Creates a new user (Registration)
 requestBody:
   required: true
   content:
@@ -11,17 +11,17 @@ requestBody:
         properties:
           username:
             type: string
-            example: joaosilva
+            example: johndoe
           email:
             type: string
-            example: joao@email.com
+            example: john@email.com
           password:
             type: string
-            example: senha_segura123
+            example: secure_password123
 responses:
   201:
-    description: Utilizador criado com sucesso.
+    description: User created successfully.
   400:
-    description: Erro de validação dos dados.
+    description: Data validation error.
   409:
-    description: Conflito (E-mail ou username já em uso).
+    description: Conflict (Email or username already in use).

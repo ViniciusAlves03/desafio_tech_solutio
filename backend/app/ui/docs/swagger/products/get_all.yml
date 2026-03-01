@@ -1,6 +1,6 @@
 tags:
-  - Produtos
-summary: Lista todos os produtos com paginação e filtros
+  - Products
+summary: Lists all products with pagination and filters
 security:
   - bearerAuth: []
 parameters:
@@ -9,23 +9,23 @@ parameters:
     schema:
       type: integer
       default: 1
-    description: Número da página
+    description: Page number
   - in: query
     name: per_page
     schema:
       type: integer
       default: 10
-    description: Quantidade de itens por página
+    description: Number of items per page
   - in: query
     name: name
     schema:
       type: string
-    description: Filtrar por parte do nome (Case-insensitive)
+    description: Filter by part of the name
   - in: query
     name: brand
     schema:
       type: string
-    description: Filtrar por marca (Case-insensitive)
+    description: Filter by brand
 responses:
   200:
-    description: Lista paginada de produtos retornada com sucesso.
+    description: Paginated list of products returned successfully.
