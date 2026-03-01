@@ -1,5 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { ProductService } from '../../../core/services/product';
 import { AuthService } from '../../../core/services/auth';
 import { Router } from '@angular/router';
@@ -7,7 +8,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './product-list.html',
   styleUrl: './product-list.scss',
 })
@@ -42,8 +43,15 @@ export class ProductListComponent implements OnInit {
   }
 
   logout(): void {
-    this.authService.logout().subscribe(() => {
+  this.authService.logout().subscribe({
+    next: () => {
+      this.authService.removeToken();
       this.router.navigate(['/login']);
-    });
-  }
+    },
+    error: () => {
+      this.authService.removeToken();
+      this.router.navigate(['/login']);
+    }
+  });
+}
 }

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -11,8 +11,8 @@ import { AuthService } from '../../../core/services/auth';
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
-export class LoginComponent {
-  loginForm: FormGroup;
+export class LoginComponent implements OnInit {
+  loginForm!: FormGroup;
   errorMessage: string = '';
   isLoading: boolean = false;
 
@@ -20,7 +20,10 @@ export class LoginComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
 
-  constructor() {
+  ngOnInit(): void {
+    this.isLoading = false;
+    this.errorMessage = '';
+
     this.loginForm = this.fb.group({
       login: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(6)]]
@@ -28,19 +31,26 @@ export class LoginComponent {
   }
 
   onSubmit(): void {
-    if (this.loginForm.invalid) return;
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+      this.errorMessage = 'Por favor, preencha todos os campos corretamente.';
+      return;
+    }
 
     this.isLoading = true;
     this.errorMessage = '';
+
     const { login, password } = this.loginForm.value;
 
     this.authService.login(login, password).subscribe({
       next: () => {
+        this.isLoading = false;
         this.router.navigate(['/products']);
       },
       error: (err) => {
         this.isLoading = false;
-        this.errorMessage = err.error?.message || 'Erro ao efetuar login. Verifique as credenciais.';
+        this.errorMessage = err.error?.message || 'Erro ao efetuar login.';
+        console.error('Login error:', err);
       }
     });
   }

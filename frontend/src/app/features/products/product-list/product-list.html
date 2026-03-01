@@ -5,7 +5,7 @@
   </header>
 
   <div class="actions">
-    <button class="btn-add">Novo Produto</button>
+    <button class="btn-add" routerLink="/products/new">Novo Produto</button>
   </div>
 
   <table class="product-table">
@@ -23,9 +23,9 @@
         <td>{{ p.id }}</td>
         <td>{{ p.name }}</td>
         <td>{{ p.brand }}</td>
-        <td>{{ p.price | currency:'EUR' }}</td>
+        <td>{{ p.price | currency:'BRL' }}</td>
         <td>
-          <button class="btn-edit">Editar</button>
+          <button class="btn-edit" [routerLink]="['/products/edit', p.id]">Editar</button>
           <button class="btn-delete" (click)="onDelete(p.id)">Excluir</button>
         </td>
       </tr>
