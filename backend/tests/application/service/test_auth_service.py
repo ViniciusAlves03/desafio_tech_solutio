@@ -18,7 +18,6 @@ class TestAuthService:
         result = auth_service.login("test@email.com", "senha_correta")
 
         assert result["access_token"] == "token_falso_123"
-        assert result["user"]["email"] == "test@email.com"
         mock_create_token.assert_called_once()
 
     def test_login_invalid_credentials(self, auth_service, mock_user_repository):

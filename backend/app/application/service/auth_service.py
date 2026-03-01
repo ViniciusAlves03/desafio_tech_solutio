@@ -18,7 +18,7 @@ class AuthService:
                 raise AuthenticationError(Messages.Auth.INVALID_CREDENTIALS)
 
             access_token = create_access_token(identity=str(user.id), expires_delta=timedelta(hours=1))
-            return {"access_token": access_token, "user": user.to_dict()}
+            return {"access_token": access_token}
         except Exception as error:
             raise error
 

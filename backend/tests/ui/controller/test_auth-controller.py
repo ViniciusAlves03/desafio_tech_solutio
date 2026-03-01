@@ -5,8 +5,7 @@ class TestAuthController:
 
     def test_login_success(self, client, mocker):
         mocker.patch.object(auth_service, 'login', return_value={
-            "access_token": "token_mockado_123",
-            "user": {"email": "admin@email.com"}
+            "access_token": "token_mockado_123"
         })
 
         response = client.post('/v1/auth/login', json={"login": "admin@email.com", "password": "123"})
@@ -15,7 +14,7 @@ class TestAuthController:
         assert response.get_json()["access_token"] == "token_mockado_123"
 
     def test_login_missing_fields(self, client):
-        response = client.post('/v1/auth/login', json={"login": "admin@email.com"}) # Falta senha
+        response = client.post('/v1/auth/login', json={"login": "admin@email.com"})
         assert response.status_code == 400
 
     def test_login_wrong_credentials(self, client, mocker):
