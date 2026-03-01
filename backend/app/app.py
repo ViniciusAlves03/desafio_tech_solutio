@@ -1,6 +1,7 @@
 from flask import Flask
 import os
 from flasgger import Swagger
+from flask_cors import CORS
 
 from app.infrastructure.database.utils import db
 from app.infrastructure.security import jwt
@@ -9,6 +10,8 @@ from app.ui.controller import product_bp, user_bp, auth_bp
 
 def create_app():
     app = Flask(__name__)
+
+    CORS(app, resources={r"/*": {"origins": "http://localhost:4200"}})
 
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
