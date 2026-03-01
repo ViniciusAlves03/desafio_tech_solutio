@@ -1,0 +1,34 @@
+<div class="container">
+  <header>
+    <h1>Gestão de Produtos</h1>
+    <button class="btn-logout" (click)='logout()'>Sair</button>
+  </header>
+
+  <div class="actions">
+    <button class="btn-add">Novo Produto</button>
+  </div>
+
+  <table class="product-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Marca</th>
+        <th>Preço</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of products">
+        <td>{{ p.id }}</td>
+        <td>{{ p.name }}</td>
+        <td>{{ p.brand }}</td>
+        <td>{{ p.price | currency:'EUR' }}</td>
+        <td>
+          <button class="btn-edit">Editar</button>
+          <button class="btn-delete" (click)="onDelete(p.id)">Excluir</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
