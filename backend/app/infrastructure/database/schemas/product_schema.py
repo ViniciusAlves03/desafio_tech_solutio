@@ -22,7 +22,8 @@ class ProductSchema(Schema):
         validate=validate.Length(min=2)
     )
     quantity = fields.Int(
-        required=True,
+        required=False,
+        load_default=0,
         validate=validate.Range(min=0, error=Messages.Validation.NEGATIVE_QUANTITY)
     )
 
