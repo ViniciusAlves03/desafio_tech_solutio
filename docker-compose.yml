@@ -35,7 +35,7 @@ services:
 
   web:
     build:
-      context: .
+      context: ./backend
       dockerfile: Dockerfile
     container_name: flask_api
     command: ["python", "-m", "flask", "run", "--host=0.0.0.0"]
@@ -54,7 +54,7 @@ services:
 
   worker:
     build:
-      context: .
+      context: ./backend
       dockerfile: Dockerfile
     container_name: flask_worker
     command: python worker.py
