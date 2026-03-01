@@ -71,19 +71,20 @@ export class ProductFormComponent implements OnInit {
     }
 
     const request = this.isEditMode && this.productId
-    ? this.productService.updateProduct(this.productId, formData)
-    : this.productService.createProduct(formData);
+      ? this.productService.updateProduct(this.productId, formData)
+      : this.productService.createProduct(formData);
 
-  request.subscribe({
-    next: () => {
-      this.notify.show('Produto enviado para processamento!', 'success');
-      this.router.navigate(['/products']);
-    },
-    error: (err) => {
-      this.isLoading = false;
-      this.notify.show('Erro ao salvar produto. Tente novamente.', 'error');
-      console.error('Erro ao processar produto', err);
-    }
-  });
-}
+    request.subscribe({
+      next: (response: any) => {
+        const msg = response?.message || 'Operação realizada com sucesso.';
+        this.notify.translateAndShow(msg, 'success');
+        this.router.navigate(['/products']);
+      },
+      error: (err) => {
+        this.isLoading = false;
+        const rawMsg = err.error?.message || 'Error saving product to database.';
+        this.notify.translateAndShow(rawMsg, 'error');
+      }
+    });
+  }
 }
