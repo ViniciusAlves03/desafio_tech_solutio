@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
-from app.infrastructure.database.models.product_model import Product
+
+from app.infrastructure.database.models import Product
 
 class IProductRepository(ABC):
     @abstractmethod

@@ -2,9 +2,9 @@ import base64
 from decimal import Decimal
 import json
 import time
-from app.utils.redis_client import redis_conn
-from app.infrastructure.database.models.product_model import Product
-from app.di.di import container
+from app.infrastructure.redis import redis_conn
+from app.infrastructure.database.models import Product
+from app.di import container
 
 QUEUE_NAME = 'product_tasks'
 

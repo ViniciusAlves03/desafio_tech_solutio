@@ -1,15 +1,15 @@
-from app.infrastructure.database.postgres.connection_postgres import ConnectionPostgres
+from app.infrastructure.database.postgres import ConnectionPostgres
 
-from app.infrastructure.repository.user_repository import UserRepository
-from app.infrastructure.repository.product_repository import ProductRepository
+from app.infrastructure.repository import (UserRepository,
+                                           ProductRepository)
 
-from app.application.service.auth_service import AuthService
-from app.application.service.product_service import ProductService
-from app.application.service.user_service import UserService
+from app.application.service import (AuthService,
+                                     ProductService,
+                                     UserService)
 
-from app.application.port.auth_service_interface import IAuthService
-from app.application.port.product_service_interface import IProductService
-from app.application.port.user_service_interface import IUserService
+from app.application.port import (IAuthService,
+                                  IProductService,
+                                  IUserService)
 
 class DIContainer:
     def __init__(self):

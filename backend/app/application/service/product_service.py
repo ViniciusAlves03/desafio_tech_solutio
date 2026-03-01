@@ -1,8 +1,9 @@
 import json
-from app.utils.redis_client import redis_conn
-from app.application.port.product_repository_interface import IProductRepository
-from app.application.domain.exception.exceptions import NotFoundError, ForbiddenError, ValidationError
-from app.utils.messages import Messages
+
+from app.infrastructure.redis import redis_conn
+from app.application.port import IProductRepository
+from app.application.domain.exception import NotFoundError, ForbiddenError, ValidationError
+from app.utils import Messages
 
 QUEUE_NAME = 'product_tasks'
 

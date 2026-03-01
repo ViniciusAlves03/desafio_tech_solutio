@@ -1,8 +1,8 @@
-from app.infrastructure.database.models.product_model import Product
-from app.application.port.product_repository_interface import IProductRepository
-from app.infrastructure.database.postgres.connection_postgres import ConnectionPostgres
-from app.application.domain.exception.exceptions import ConflictError, RepositoryError
-from app.utils.messages import Messages
+from app.infrastructure.database.models import Product
+from app.application.port import IProductRepository
+from app.infrastructure.database.postgres import ConnectionPostgres
+from app.application.domain.exception import RepositoryError
+from app.utils import Messages
 
 class ProductRepository(IProductRepository):
     def __init__(self, db_connection: ConnectionPostgres):

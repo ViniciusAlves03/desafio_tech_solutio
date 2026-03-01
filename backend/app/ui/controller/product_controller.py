@@ -3,9 +3,10 @@ import io
 from flask import Blueprint, request, jsonify, make_response, send_file
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from flasgger import swag_from
+
 from app.di.di import container
-from app.infrastructure.database.schemas.product_schema import product_schema, products_schema
-from app.ui.exception.api_exception_manager import APIExceptionManager
+from app.infrastructure.database.schemas import product_schema, products_schema
+from app.ui.exception import APIExceptionManager
 
 product_bp = Blueprint('product_bp', __name__)
 product_service = container.get_product_service()

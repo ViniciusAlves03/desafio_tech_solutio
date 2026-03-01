@@ -1,5 +1,6 @@
-from app.utils.db import db
 from sqlalchemy.sql import func
+
+from app.infrastructure.database.utils import db
 
 class Product(db.Model):
     __tablename__ = 'products'

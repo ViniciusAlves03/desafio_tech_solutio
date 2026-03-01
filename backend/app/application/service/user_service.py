@@ -1,7 +1,7 @@
-from app.infrastructure.database.models.user_model import User
-from app.application.port.user_repository_interface import IUserRepository
-from app.application.domain.exception.exceptions import NotFoundError, ForbiddenError, ConflictError
-from app.utils.messages import Messages
+from app.infrastructure.database.models import User
+from app.application.port import IUserRepository
+from app.application.domain.exception import NotFoundError, ForbiddenError, ConflictError
+from app.utils import Messages
 
 class UserService:
     def __init__(self, user_repository: IUserRepository):

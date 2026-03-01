@@ -1,5 +1,6 @@
 from marshmallow import Schema, fields, validate, EXCLUDE
-from app.utils.messages import Messages
+
+from app.utils import Messages
 
 class ProductSchema(Schema):
     class Meta:

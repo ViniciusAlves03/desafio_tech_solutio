@@ -2,16 +2,10 @@ from flask import Flask
 import os
 from flasgger import Swagger
 
-from app.infrastructure.database.models.product_model import Product
-from app.infrastructure.database.models.user_model import User
-
-from app.utils.db import db
-from app.utils.jwt_config import jwt
-from app.utils.redis_client import redis_conn
-
-from app.ui.controller.product_routes import product_bp
-from app.ui.controller.user_routes import user_bp
-from app.ui.controller.auth_routes import auth_bp
+from app.infrastructure.database.utils import db
+from app.infrastructure.security import jwt
+from app.infrastructure.redis import redis_conn
+from app.ui.controller import product_bp, user_bp, auth_bp
 
 def create_app():
     app = Flask(__name__)

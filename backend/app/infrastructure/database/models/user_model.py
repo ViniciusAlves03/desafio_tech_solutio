@@ -1,6 +1,7 @@
 from werkzeug.security import generate_password_hash, check_password_hash
-from app.utils.db import db
 from sqlalchemy.sql import func
+
+from app.infrastructure.database.utils import db
 
 class User(db.Model):
     __tablename__ = 'users'

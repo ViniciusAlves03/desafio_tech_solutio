@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
-from app.infrastructure.database.models.user_model import User
+
+from app.infrastructure.database.models import User
 
 class IUserRepository(ABC):
     @abstractmethod

@@ -1,9 +1,10 @@
 from datetime import timedelta
 from flask_jwt_extended import create_access_token
-from app.application.port.user_repository_interface import IUserRepository
-from app.utils.redis_client import redis_conn
-from app.application.domain.exception.exceptions import AuthenticationError
-from app.utils.messages import Messages
+
+from app.application.port import IUserRepository
+from app.infrastructure.redis import redis_conn
+from app.application.domain.exception import AuthenticationError
+from app.utils import Messages
 
 class AuthService:
     def __init__(self, user_repository: IUserRepository):
