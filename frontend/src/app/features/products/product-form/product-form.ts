@@ -78,7 +78,9 @@ export class ProductFormComponent implements OnInit {
       next: (response: any) => {
         const msg = response?.message || 'Operação realizada com sucesso.';
         this.notify.translateAndShow(msg, 'success');
-        this.router.navigate(['/products']);
+        setTimeout(() => {
+          this.router.navigate(['/products']);
+        }, 1000);
       },
       error: (err) => {
         this.isLoading = false;

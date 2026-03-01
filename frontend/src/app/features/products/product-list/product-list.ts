@@ -5,6 +5,8 @@ import { ProductService } from '../../../core/services/product';
 import { AuthService } from '../../../core/services/auth';
 import { Router } from '@angular/router';
 import { NotificationService } from '../../../core/services/notification';
+import { ConfirmService } from '../../../core/services/confirm';
+import { ViewProductService } from '../../../core/services/view-product.service';
 
 @Component({
   selector: 'app-product-list',
@@ -19,6 +21,8 @@ export class ProductListComponent implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
   private notify = inject(NotificationService);
+  private confirmSrv = inject(ConfirmService);
+  private viewSrv = inject(ViewProductService);
 
   ngOnInit(): void {
     this.loadProducts();
@@ -34,17 +38,28 @@ export class ProductListComponent implements OnInit {
   }
 
   onDelete(id: number): void {
-    if (confirm('Tem certeza que deseja eliminar este produto?')) {
+    this.confirmSrv.ask('Tem certeza que deseja eliminar este produto?', () => {
       this.productService.deleteProduct(id).subscribe({
         next: () => {
+          this.products = this.products.filter(p => p.id !== id);
+
           this.notify.show('Pedido de exclusão enviado para a fila.', 'success');
-          this.loadProducts();
         },
-        error: () => {
-          this.notify.show('Não foi possível excluir o produto.', 'error');
-        }
+        error: () => this.notify.show('Erro ao excluir produto.', 'error')
       });
-    }
+    });
+  }
+
+  onView(product: any): void {
+    this.productService.getProductImage(product.id).subscribe({
+      next: (blob) => {
+        const imageUrl = URL.createObjectURL(blob);
+        this.viewSrv.open({ ...product, imageUrl });
+      },
+      error: () => {
+        this.viewSrv.open(product);
+      }
+    });
   }
 
   logout(): void {

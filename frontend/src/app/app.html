@@ -1,5 +1,41 @@
 <router-outlet></router-outlet>
 
+<div class="modal-overlay" *ngIf="viewSrv.display()">
+  <div class="modal-card view-card">
+    <button class="close-btn" (click)="viewSrv.close()">×</button>
+
+    <h3>Detalhes do Produto</h3>
+
+    <div class="product-info" *ngIf="viewSrv.product() as p">
+      <div class="image-container" *ngIf="p.imageUrl">
+        <img [src]="p.imageUrl" [alt]="p.name">
+      </div>
+
+      <div class="details">
+        <p><strong>Nome:</strong> {{ p.name }}</p>
+        <p><strong>Marca:</strong> {{ p.brand }}</p>
+        <p><strong>Preço:</strong> {{ p.price | currency:'BRL' }}</p>
+        <p *ngIf="p.quantity"><strong>Quantidade:</strong> {{ p.quantity }}</p>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-cancel" (click)="viewSrv.close()">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="confirmSrv.display()">
+  <div class="modal-card">
+    <h3>Confirmação</h3>
+    <p>{{ confirmSrv.message }}</p>
+    <div class="modal-actions">
+      <button class="btn-cancel" (click)="confirmSrv.close()">Não</button>
+      <button class="btn-confirm" (click)="confirmSrv.confirm()">Sim, Excluir</button>
+    </div>
+  </div>
+</div>
+
 <div *ngIf="notify.notification() as n" class="toast-container" [ngClass]="n.type">
   {{ n.message }}
 </div>

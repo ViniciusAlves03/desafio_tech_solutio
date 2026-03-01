@@ -25,6 +25,7 @@
         <td>{{ p.brand }}</td>
         <td>{{ p.price | currency:'BRL' }}</td>
         <td>
+          <button class="btn-view" (click)="onView(p)">Visualizar</button>
           <button class="btn-edit" [routerLink]="['/products/edit', p.id]">Editar</button>
           <button class="btn-delete" (click)="onDelete(p.id)">Excluir</button>
         </td>
