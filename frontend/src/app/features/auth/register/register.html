@@ -1,0 +1,31 @@
+<div class="login-container">
+  <div class="login-card">
+    <h2>Criar Conta</h2>
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+      <div class="form-group">
+        <label>Nome de Usuário (username)</label>
+        <input type="text" formControlName="username" placeholder="ex: jdoe" />
+      </div>
+
+      <div class="form-group">
+        <label>E-mail</label>
+        <input type="email" formControlName="email" placeholder="email@exemplo.com" />
+      </div>
+
+      <div class="form-group">
+        <label>Senha</label>
+        <input type="password" formControlName="password" placeholder="******" />
+        <div class="validation-error" *ngIf="registerForm.get('password')?.errors?.['minlength'] && registerForm.get('password')?.touched">
+          A senha deve ter pelo menos 6 caracteres.
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="isLoading">
+        {{ isLoading ? 'A processar...' : 'Registar' }}
+      </button>
+
+      <p class="mt-4">Já tem conta? <a routerLink="/login">Faça Login</a></p>
+    </form>
+  </div>
+</div>
