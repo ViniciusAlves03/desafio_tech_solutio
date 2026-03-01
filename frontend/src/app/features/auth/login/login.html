@@ -1,0 +1,27 @@
+<div class="login-container">
+  <div class="login-card">
+    <h2>Bem-vindo</h2>
+    <p>Faça login para gerir os seus produtos</p>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+      <div class="form-group">
+        <label for="login">E-mail ou Username</label>
+        <input type="text" id="login" formControlName="login" placeholder="ex: admin@email.com" />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Palavra-passe</label>
+        <input type="password" id="password" formControlName="password" placeholder="******" />
+      </div>
+
+      <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <button type="submit" [disabled]="loginForm.invalid || isLoading">
+        {{ isLoading ? 'A entrar...' : 'Entrar' }}
+      </button>
+    </form>
+  </div>
+</div>
