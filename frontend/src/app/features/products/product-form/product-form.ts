@@ -44,14 +44,21 @@ export class ProductFormComponent implements OnInit {
   }
 
   loadProductData(id: number): void {
-    this.productService.getProducts().subscribe({
-      next: (response) => {
-        const product = response.items.find((p: any) => p.id === id);
+    this.productService.getProductById(id).subscribe({
+      next: (product) => {
         if (product) {
-          this.productForm.patchValue(product);
+          this.productForm.patchValue({
+            name: product.name,
+            brand: product.brand,
+            price: product.price,
+            quantity: product.quantity
+          });
         }
       },
-      error: () => this.notify.show('Erro ao carregar dados do produto.', 'error')
+      error: () => {
+        this.notify.show('Erro ao carregar dados do produto.', 'error');
+        this.router.navigate(['/products']);
+      }
     });
   }
 

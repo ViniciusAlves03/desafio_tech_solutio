@@ -1,46 +1,57 @@
 <div class="form-container">
   <div class="form-card">
-    <h2>{{ isEditMode ? 'Editar Produto' : 'Novo Produto' }}</h2>
+    <div class="form-header">
+      <h2>{{ isEditMode ? 'Editar Produto' : 'Novo Produto' }}</h2>
+      <p>Preencha as informações abaixo para gerir o seu inventário.</p>
+    </div>
 
     <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label>Nome</label>
-        <input type="text" formControlName="name" placeholder="Ex: Teclado Mecânico"
-               [class.invalid]="productForm.get('name')?.invalid && productForm.get('name')?.touched">
-        <div class="validation-error" *ngIf="productForm.get('name')?.invalid && productForm.get('name')?.touched">
-          <small *ngIf="productForm.get('name')?.errors?.['required']">O nome é obrigatório.</small>
-          <small *ngIf="productForm.get('name')?.errors?.['minlength']">Mínimo de 2 caracteres.</small>
+      <div class="form-section">
+        <div class="form-group full-width">
+          <label>Nome do Produto</label>
+          <input type="text" formControlName="name" placeholder="Ex: Teclado Mecânico RGB"
+                 [class.invalid]="productForm.get('name')?.invalid && productForm.get('name')?.touched">
+          <div class="validation-error" *ngIf="productForm.get('name')?.invalid && productForm.get('name')?.touched">
+            <small *ngIf="productForm.get('name')?.errors?.['required']">O nome é obrigatório.</small>
+            <small *ngIf="productForm.get('name')?.errors?.['minlength']">Mínimo de 2 caracteres.</small>
+          </div>
         </div>
-      </div>
 
-      <div class="form-group">
-        <label>Marca</label>
-        <input type="text" formControlName="brand" placeholder="Ex: Razer"
-               [class.invalid]="productForm.get('brand')?.invalid && productForm.get('brand')?.touched">
+        <div class="form-group full-width">
+          <label>Marca</label>
+          <input type="text" formControlName="brand" placeholder="Ex: Razer"
+                 [class.invalid]="productForm.get('brand')?.invalid && productForm.get('brand')?.touched">
+        </div>
       </div>
 
       <div class="form-row">
         <div class="form-group">
           <label>Preço (R$)</label>
-          <input type="number" formControlName="price" step="0.01">
+          <input type="number" formControlName="price" step="0.01" placeholder="0,00">
         </div>
 
         <div class="form-group">
           <label>Quantidade</label>
-          <input type="number" formControlName="quantity">
+          <input type="number" formControlName="quantity" placeholder="0">
         </div>
       </div>
 
-      <div class="form-group">
-        <label>Imagem do Produto (Opcional)</label>
-        <input type="file" (change)="onFileSelected($event)" accept="image/*">
+      <div class="form-group full-width">
+        <label>Imagem do Produto</label>
+        <div class="file-upload-wrapper">
+          <input type="file" id="fileInput" (change)="onFileSelected($event)" accept="image/*" class="file-input">
+          <label for="fileInput" class="file-label">
+            <span class="file-icon">☁️</span>
+            <span>{{ selectedFile ? selectedFile.name : 'Clique para carregar ou arraste uma imagem' }}</span>
+          </label>
+        </div>
       </div>
 
       <div class="form-actions">
         <button type="button" class="btn-cancel" routerLink="/products">Cancelar</button>
         <button type="submit" class="btn-save" [disabled]="productForm.invalid || isLoading">
-          <span *ngIf="!isLoading">{{ isEditMode ? 'Atualizar' : 'Salvar Produto' }}</span>
-          <span *ngIf="isLoading">Processando...</span>
+          <span *ngIf="!isLoading">{{ isEditMode ? 'Confirmar Alterações' : 'Cadastrar Produto' }}</span>
+          <span *ngIf="isLoading" class="loader-text">Processando...</span>
         </button>
       </div>
     </form>

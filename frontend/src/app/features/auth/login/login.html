@@ -1,36 +1,66 @@
-<div class="login-container">
-  <div class="login-card">
-    <h2>Bem-vindo</h2>
-    <p>Faça login para gerir os seus produtos</p>
+<div class="auth-layout">
+  <div class="auth-banner">
+    <div class="banner-content">
+      <h1>Desafio Tech Solutio</h1>
+      <p class="subtitle">Desafio voltado a criar um sitema de gestão de produtos</p>
 
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <ul class="features-list">
+        <li><span>✓</span> CRUD de Produtos</li>
+        <li><span>✓</span> Login e Logout</li>
+        <li><span>✓</span> Autenticação e Autorização JWT</li>
+      </ul>
+    </div>
+  </div>
 
-      <div class="form-group">
-        <label for="login">E-mail ou Username</label>
-        <input type="text" id="login" formControlName="login" placeholder="ex: admin@email.com" />
+  <div class="auth-form-wrapper">
+    <div class="form-card">
+      <div class="mobile-brand">
+        <h2>Tech Solutio</h2>
       </div>
 
-      <div class="form-group">
-        <label for="password">Senha</label>
-        <input type="password" id="password" formControlName="password" placeholder="******" />
+      <div class="form-header">
+        <h2>Bem-vindo de volta!</h2>
+        <p>Faça login para acessar seus produtos.</p>
+      </div>
 
-        <div class="validation-error"
-          *ngIf="loginForm.get('password')?.errors?.['minlength'] && loginForm.get('password')?.touched">
-          A senha deve ter pelo menos 6 caracteres.
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="login">E-mail ou Username</label>
+          <input type="text" id="login" formControlName="login" placeholder="ex: admin@email.com"
+            [class.invalid]="loginForm.get('login')?.invalid && loginForm.get('login')?.touched" />
         </div>
-      </div>
 
-      <div class="error-message" *ngIf="errorMessage">
-        {{ errorMessage }}
-      </div>
+        <div class="form-group">
+          <label for="password">Senha</label>
 
-      <button type="submit" [disabled]="isLoading">
-        {{ isLoading ? 'Entrando...' : 'Entrar' }}
-      </button>
+          <input [type]="showPassword ? 'text' : 'password'" id="password" formControlName="password"
+            placeholder="••••••••"
+            [class.invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" />
 
-      <div class="register-link">
-        <p>Ainda não tem conta? <a routerLink="/register">Registe-se aqui</a></p>
-      </div>
-    </form>
+          <div class="checkbox-wrapper">
+            <input type="checkbox" id="show-pwd" (change)="togglePasswordVisibility()">
+            <label for="show-pwd">Mostrar senha</label>
+          </div>
+
+          <div class="validation-error"
+            *ngIf="loginForm.get('password')?.errors?.['minlength'] && loginForm.get('password')?.touched">
+            <small>A senha deve ter pelo menos 6 caracteres.</small>
+          </div>
+        </div>
+
+        <div class="error-message" *ngIf="errorMessage">
+          {{ errorMessage }}
+        </div>
+
+        <button type="submit" class="btn-submit" [disabled]="isLoading">
+          <span *ngIf="!isLoading">Entrar</span>
+          <span *ngIf="isLoading" class="loader">Entrando...</span>
+        </button>
+
+        <div class="auth-link">
+          <p>Ainda não tem conta? <a routerLink="/register">Registe-se aqui</a></p>
+        </div>
+      </form>
+    </div>
   </div>
 </div>

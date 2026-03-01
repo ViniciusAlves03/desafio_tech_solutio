@@ -1,31 +1,61 @@
-<div class="login-container">
-  <div class="login-card">
-    <h2>Criar Conta</h2>
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+<div class="auth-layout">
+  <div class="auth-banner register-theme">
+    <div class="banner-content">
+      <h1>Registre-se Agora!</h1>
+      <p class="subtitle">Faça seu registro e faça a gestão dos seus produtos.</p>
 
-      <div class="form-group">
-        <label>Nome de Usuário (username)</label>
-        <input type="text" formControlName="username" placeholder="ex: jdoe" />
-      </div>
-
-      <div class="form-group">
-        <label>E-mail</label>
-        <input type="email" formControlName="email" placeholder="email@exemplo.com" />
-      </div>
-
-      <div class="form-group">
-        <label>Senha</label>
-        <input type="password" formControlName="password" placeholder="******" />
-        <div class="validation-error" *ngIf="registerForm.get('password')?.errors?.['minlength'] && registerForm.get('password')?.touched">
-          A senha deve ter pelo menos 6 caracteres.
+      <div class="testimonial-box">
+        <p>"A melhor e mais intuitiva ferramenta que já utilizei para gerir os meus produtos."</p>
+        <div class="author">
+          <div class="avatar"></div>
+          <span>Usuário Verificado</span>
         </div>
       </div>
+    </div>
+  </div>
 
-      <button type="submit" [disabled]="isLoading">
-        {{ isLoading ? 'A processar...' : 'Registar' }}
-      </button>
+  <div class="auth-form-wrapper">
+    <div class="form-card">
+      <div class="mobile-brand">
+        <h2>Tech Solutio</h2>
+      </div>
 
-      <p class="mt-4">Já tem conta? <a routerLink="/login">Faça Login</a></p>
-    </form>
+      <div class="form-header">
+        <h2>Criar Conta</h2>
+        <p>Preencha os dados abaixo para se registar.</p>
+      </div>
+
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label>Nome de Usuário (username)</label>
+          <input type="text" formControlName="username" placeholder="ex: jdoe"
+                 [class.invalid]="registerForm.get('username')?.invalid && registerForm.get('username')?.touched" />
+        </div>
+
+        <div class="form-group">
+          <label>E-mail</label>
+          <input type="email" formControlName="email" placeholder="email@exemplo.com"
+                 [class.invalid]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" />
+        </div>
+
+        <div class="form-group">
+          <label>Senha</label>
+          <input type="password" formControlName="password" placeholder="••••••••"
+                 [class.invalid]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" />
+          <div class="validation-error" *ngIf="registerForm.get('password')?.errors?.['minlength'] && registerForm.get('password')?.touched">
+            <small>A senha deve ter pelo menos 6 caracteres.</small>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit" [disabled]="isLoading">
+          <span *ngIf="!isLoading">Criar a Minha Conta</span>
+          <span *ngIf="isLoading" class="loader">A processar...</span>
+        </button>
+
+        <div class="auth-link">
+          <p>Já tem uma conta? <a routerLink="/login">Faça Login aqui</a></p>
+        </div>
+      </form>
+    </div>
   </div>
 </div>

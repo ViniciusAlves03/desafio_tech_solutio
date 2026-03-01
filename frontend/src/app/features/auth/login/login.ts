@@ -17,6 +17,7 @@ export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   errorMessage: string = '';
   isLoading: boolean = false;
+  showPassword = false;
 
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
@@ -58,5 +59,9 @@ export class LoginComponent implements OnInit {
         this.errorMessage = BACKEND_MESSAGES[rawMsg] || 'Erro ao efetuar login.';
       }
     });
+  }
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
   }
 }

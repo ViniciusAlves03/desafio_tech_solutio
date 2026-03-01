@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { NotificationService } from '../app/core/services/notification';
+import { NotificationService } from './core/services/notification';
 import { ConfirmService } from './core/services/confirm';
 import { ViewProductService } from './core/services/view-product.service';
 import { AuthService } from './core/services/auth';

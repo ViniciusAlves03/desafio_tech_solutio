@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './features/auth/login/login';
-import { ProductListComponent } from '../app/features/products/product-list/product-list';
-import { ProductFormComponent } from '../app/features/products/product-form/product-form';
-import { authGuard } from '../app/core/guards/auth-guard';
+import { ProductListComponent } from './features/products/product-list/product-list';
+import { ProductFormComponent } from './features/products/product-form/product-form';
+import { authGuard } from './core/guards/auth-guard';
 import { RegisterComponent } from './features/auth/register/register';
 
 export const routes: Routes = [

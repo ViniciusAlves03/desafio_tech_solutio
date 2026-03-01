@@ -1,52 +1,71 @@
 <div class="container">
- <header class="page-header">
+
+  <header class="page-header">
     <h1>Lista de Produtos</h1>
     <button class="btn-add" routerLink="/products/new">Novo Produto</button>
   </header>
 
   <div class="filter-bar">
     <input type="text" [(ngModel)]="filterName" (keyup.enter)="onSearch()" placeholder="Filtrar por nome">
-
     <input type="text" [(ngModel)]="filterBrand" (keyup.enter)="onSearch()" placeholder="Filtrar por marca">
-
     <button class="btn-search" (click)="onSearch()">Buscar</button>
   </div>
 
-  <table class="product-table">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Nome</th>
-        <th>Marca</th>
-        <th>Preço</th>
-        <th>Ações</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let p of products">
-        <td>{{ p.id }}</td>
-        <td>{{ p.name }}</td>
-        <td>{{ p.brand }}</td>
-        <td>{{ p.price | currency:'BRL' }}</td>
-        <td>
-          <button class="btn-view" (click)="onView(p)">Visualizar</button>
-          <button class="btn-edit" [routerLink]="['/products/edit', p.id]">Editar</button>
-          <button class="btn-delete" (click)="onDelete(p.id)">Excluir</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <div class="pagination-container" *ngIf="totalPages > 0">
-    <button class="btn-pagination" (click)="goToPreviousPage()" [disabled]="currentPage === 1">
-      Anterior
-    </button>
+  <div class="table-wrapper">
+    <table class="product-table">
+      <thead>
+        <tr>
+          <th class="sortable" (click)="toggleSort('id')">
+            ID
+            <span class="sort-icon" *ngIf="sortBy === 'id'">
+              {{ sortOrder === 'asc' ? '↑' : '↓' }}
+            </span>
+          </th>
 
-    <span class="page-info">
-      Página {{ currentPage }} de {{ totalPages }}
-    </span>
+          <th class="sortable" (click)="toggleSort('name')">
+            Nome
+            <span class="sort-icon" *ngIf="sortBy === 'name'">
+              {{ sortOrder === 'asc' ? '↑' : '↓' }}
+            </span>
+          </th>
 
-    <button class="btn-pagination" (click)="goToNextPage()" [disabled]="currentPage === totalPages || totalPages === 0">
-      Próxima
-    </button>
+          <th>Marca</th>
+          <th>Preço</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of products">
+          <td>{{ p.id }}</td>
+          <td class="td-name">{{ p.name }}</td>
+          <td class="td-brand">{{ p.brand }}</td>
+          <td class="td-price">{{ p.price | currency:'BRL' }}</td>
+          <td>
+            <button class="btn-view" (click)="onView(p)">Visualizar</button>
+
+            <ng-container *ngIf="canModify(p)">
+              <button class="btn-edit" [routerLink]="['/products/edit', p.id]">Editar</button>
+              <button class="btn-delete" (click)="onDelete(p.id)">Excluir</button>
+            </ng-container>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="pagination-container" *ngIf="totalPages > 0">
+      <button class="btn-pagination" (click)="goToPreviousPage()" [disabled]="currentPage === 1">
+        Anterior
+      </button>
+
+      <span class="page-info">
+        Página {{ currentPage }} de {{ totalPages }}
+      </span>
+
+      <button class="btn-pagination" (click)="goToNextPage()"
+        [disabled]="currentPage === totalPages || totalPages === 0">
+        Próxima
+      </button>
+    </div>
   </div>
+
 </div>

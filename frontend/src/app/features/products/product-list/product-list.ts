@@ -24,6 +24,10 @@ export class ProductListComponent implements OnInit {
   perPage: number = 10;
   filterName: string = '';
   filterBrand: string = '';
+  sortBy: string = 'id';
+  sortOrder: string = 'asc';
+  currentUserId: number | null = null;
+
   private productService = inject(ProductService);
   private authService = inject(AuthService);
   private router = inject(Router);
@@ -32,12 +36,24 @@ export class ProductListComponent implements OnInit {
   private viewSrv = inject(ViewProductService);
 
   ngOnInit(): void {
+    this.currentUserId = this.authService.getUserIdFromToken();
     this.loadProducts(this.currentPage);
+  }
+
+  canModify(product: any): boolean {
+    if (!this.currentUserId) return false;
+    const ownerId = product.user_id || product.userId || product.usuario_id;
+
+    if (!ownerId) {
+      return false;
+    }
+
+    return String(ownerId) === String(this.currentUserId);
   }
 
   loadProducts(page: number = 1): void {
     this.currentPage = page;
-    this.productService.getProducts(page, 10, this.filterName, this.filterBrand).subscribe({
+    this.productService.getProducts(page, 10, this.filterName, this.filterBrand, this.sortBy, this.sortOrder).subscribe({
       next: (response) => {
         this.products = response.items;
         this.totalPages = response.metadata.total_pages;
@@ -63,11 +79,10 @@ export class ProductListComponent implements OnInit {
   }
 
   onDelete(id: number): void {
-    this.confirmSrv.ask('Tem certeza que deseja eliminar este produto?', () => {
+    this.confirmSrv.ask('Tem certeza que deseja excluir esse produto?', () => {
       this.productService.deleteProduct(id).subscribe({
         next: () => {
           this.products = this.products.filter(p => p.id !== id);
-
           this.notify.show('Pedido de exclusão enviado para a fila.', 'success');
         },
         error: () => this.notify.show('Erro ao excluir produto.', 'error')
@@ -85,6 +100,16 @@ export class ProductListComponent implements OnInit {
         this.viewSrv.open(product);
       }
     });
+  }
+
+  toggleSort(column: string): void {
+    if (this.sortBy === column) {
+      this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortBy = column;
+      this.sortOrder = 'asc';
+    }
+    this.loadProducts(this.currentPage);
   }
 
   logout(): void {

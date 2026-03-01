@@ -1,56 +1,74 @@
 .form-container {
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  padding: 4rem 2rem;
-  background-color: #f4f7f6;
+  align-items: center;
+  padding: 3rem 1.5rem;
+  background-color: #f8faff;
   min-height: calc(100vh - 120px);
 }
 
 .form-card {
   background: white;
-  padding: 2.5rem;
-  border-radius: 12px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  padding: 3rem;
+  border-radius: 20px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 600px;
+  max-width: 650px;
+  animation: slideUp 0.5s ease-out;
 
-  h2 {
-    margin: 0 0 2rem 0;
-    color: #2c3e50;
+  .form-header {
     text-align: center;
-    font-size: 1.75rem;
-    border-bottom: 2px solid #f0f2f5;
-    padding-bottom: 1rem;
+    margin-bottom: 2.5rem;
+
+    h2 {
+      margin: 0;
+      color: #2c3e50;
+      font-size: 2rem;
+      font-weight: 800;
+    }
+
+    p {
+      color: #7f8c8d;
+      margin-top: 0.5rem;
+    }
   }
 
   .form-group {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.8rem;
 
     label {
-      display: block;
-      margin-bottom: 0.6rem;
-      font-weight: 600;
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.8rem;
+      font-weight: 700;
       color: #34495e;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
+
+      .icon {
+        margin-right: 8px;
+        font-size: 1.1rem;
+      }
     }
 
-    input {
+    input:not([type="file"]) {
       width: 100%;
-      padding: 0.8rem 1rem;
-      border: 1.5px solid #e1e4e8;
-      border-radius: 8px;
+      padding: 1rem 1.2rem;
+      border: 2px solid #edf2f7;
+      border-radius: 12px;
       font-size: 1rem;
-      transition: all 0.2s ease;
+      transition: all 0.3s ease;
+      background-color: #fcfdfe;
 
       &:focus {
         border-color: #3498db;
-        box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.15);
+        background-color: white;
+        box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.1);
         outline: none;
       }
 
       &.invalid {
         border-color: #e74c3c;
+        background-color: #fff5f5;
       }
     }
   }
@@ -61,28 +79,50 @@
     gap: 1.5rem;
   }
 
-  .validation-error {
-    color: #e74c3c;
-    font-size: 0.8rem;
-    margin-top: 0.4rem;
-    font-weight: 500;
+  .file-upload-wrapper {
+    .file-input {
+      display: none;
+    }
+
+    .file-label {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+      border: 2px dashed #d5dbdb;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+      background: #fdfefe;
+
+      &:hover {
+        border-color: #3498db;
+        background: #f0f7ff;
+      }
+
+      .file-icon {
+        font-size: 2rem;
+        margin-bottom: 10px;
+      }
+    }
   }
 
   .form-actions {
     display: flex;
     justify-content: flex-end;
-    gap: 1rem;
-    margin-top: 2.5rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid #eee;
+    gap: 1.2rem;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 2px solid #f8faff;
 
     button {
-      padding: 0.8rem 1.8rem;
-      border-radius: 6px;
-      font-weight: 600;
+      padding: 1rem 2rem;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 1rem;
       cursor: pointer;
       border: none;
-      transition: all 0.2s;
+      transition: all 0.3s ease;
     }
 
     .btn-cancel {
@@ -91,26 +131,31 @@
 
       &:hover {
         background-color: #c0392b;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(231, 76, 60, 0.2);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(231, 76, 60, 0.3);
       }
     }
 
     .btn-save {
-      background-color: #2ecc71;
+      background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
       color: white;
-      min-width: 160px;
+      box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
 
       &:hover:not(:disabled) {
-        background-color: #27ae60;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(46, 204, 113, 0.2);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
       }
 
       &:disabled {
-        background-color: #bdc3c7;
+        background: #bdc3c7;
+        box-shadow: none;
         cursor: not-allowed;
       }
     }
   }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }

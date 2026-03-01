@@ -38,7 +38,7 @@ export class RegisterComponent {
     this.isLoading = true;
     this.authService.register(this.registerForm.value).subscribe({
       next: () => {
-        this.notify.translateAndShow('Utilizador registado com sucesso!', 'success');
+        this.notify.translateAndShow('Usuário registado com sucesso!', 'success');
         this.router.navigate(['/login']);
       },
       error: (err) => {

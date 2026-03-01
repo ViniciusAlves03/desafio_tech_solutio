@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { NotificationService } from '../services/notification'
+import { NotificationService } from './notification';
 
 @Injectable({
   providedIn: 'root'
@@ -54,5 +54,21 @@ export class AuthService {
   isAuthenticated(): boolean {
     const token = this.getToken();
     return token !== null && token.trim() !== '';
+  }
+
+  getUserIdFromToken(): number | null {
+    const token = this.getToken();
+    if (!token) return null;
+
+    try {
+      const payloadBase64 = token.split('.')[1];
+      const decodedPayload = atob(payloadBase64.replace(/-/g, '+').replace(/_/g, '/'));
+      const payload = JSON.parse(decodedPayload);
+
+      return payload.sub || payload.user_id || payload.id || null;
+    } catch (error) {
+      console.error('Erro ao decodificar o token JWT:', error);
+      return null;
+    }
   }
 }
