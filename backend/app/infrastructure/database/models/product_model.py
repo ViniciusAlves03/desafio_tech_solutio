@@ -10,7 +10,7 @@ class Product(db.Model):
     price = db.Column(db.Numeric(10, 2), nullable=False)
     brand = db.Column(db.String(100), nullable=False)
     quantity = db.Column(db.Integer, default=0, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
     image_data = db.Column(db.LargeBinary, nullable=True)
     image_mime_type = db.Column(db.String(50), nullable=True)
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
