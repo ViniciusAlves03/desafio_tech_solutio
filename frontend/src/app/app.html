@@ -28,9 +28,56 @@
   </main>
 
   <footer class="main-footer">
-    <p>Código disponível no <a href="https://github.com/ViniciusAlves03/desafio_tech_solutio" target="_blank">GitHub</a>
-    </p>
+    <p>Código disponível no <a href="https://github.com/ViniciusAlves03/desafio_tech_solutio" target="_blank">GitHub</a></p>
   </footer>
+
+  <div class="modal-overlay" *ngIf="viewSrv.display()">
+    <div class="modal-card product-detail-modal">
+      <button class="close-btn" (click)="viewSrv.close()" aria-label="Fechar">×</button>
+
+      <h3>Detalhes do Produto</h3>
+
+      <div *ngIf="viewSrv.product() as p" class="product-info-layout">
+        <div class="image-column">
+          <div class="img-wrapper" *ngIf="p.imageUrl">
+            <img [src]="p.imageUrl" [alt]="p.name">
+          </div>
+          <div class="no-image-placeholder" *ngIf="!p.imageUrl">
+            <span>Sem Imagem</span>
+          </div>
+        </div>
+
+        <div class="details-column">
+          <dl class="details-list">
+            <div class="detail-item main-item">
+              <dt>Nome</dt>
+              <dd class="product-name">{{ p.name }}</dd>
+            </div>
+
+            <div class="detail-group">
+              <div class="detail-item">
+                <dt>Marca</dt>
+                <dd>{{ p.brand }}</dd>
+              </div>
+              <div class="detail-item">
+                <dt>Quantidade</dt>
+                <dd>{{ p.quantity }} unidades</dd>
+              </div>
+            </div>
+
+            <div class="detail-item price-item">
+              <dt>Preço Unitário</dt>
+              <dd class="price">{{ p.price | currency:'BRL' }}</dd>
+            </div>
+          </dl>
+
+          <div class="modal-actions">
+            <button class="btn-cancel" (click)="viewSrv.close()">Fechar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div class="modal-overlay" *ngIf="showUserModal">
     <div class="modal-card user-modal">
@@ -41,6 +88,7 @@
       <div *ngIf="userModalMode === 'view' && userData" class="user-details">
         <p><strong>Username:</strong> {{ userData.username }}</p>
         <p><strong>E-mail:</strong> {{ userData.email }}</p>
+        <p><strong>Registado em:</strong> {{ userData.created_at | date:'dd/MM/yyyy HH:mm' }}</p>
 
         <div class="modal-actions">
           <button class="btn-cancel" (click)="closeUserModal()">Fechar</button>
@@ -50,23 +98,20 @@
 
       <div *ngIf="userModalMode === 'edit'">
         <form [formGroup]="userForm" (ngSubmit)="onUpdateUser()" class="user-form">
-
           <div class="form-group">
             <label>Username</label>
             <input type="text" formControlName="username"
-              [class.invalid]="userForm.get('username')?.invalid && userForm.get('username')?.touched" />
-            <div class="validation-error"
-              *ngIf="userForm.get('username')?.invalid && userForm.get('username')?.touched">
+                   [class.invalid]="userForm.get('username')?.invalid && userForm.get('username')?.touched" />
+            <div class="validation-error" *ngIf="userForm.get('username')?.invalid && userForm.get('username')?.touched">
               <small *ngIf="userForm.get('username')?.errors?.['required']">O nome de usuário é obrigatório.</small>
-              <small *ngIf="userForm.get('username')?.errors?.['minlength']">O nome de usuário deve ter pelo menos 3
-                caracteres.</small>
+              <small *ngIf="userForm.get('username')?.errors?.['minlength']">O nome de usuário deve ter pelo menos 3 caracteres.</small>
             </div>
           </div>
 
           <div class="form-group">
             <label>E-mail</label>
             <input type="email" formControlName="email"
-              [class.invalid]="userForm.get('email')?.invalid && userForm.get('email')?.touched" />
+                   [class.invalid]="userForm.get('email')?.invalid && userForm.get('email')?.touched" />
             <div class="validation-error" *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched">
               <small *ngIf="userForm.get('email')?.errors?.['required']">O e-mail é obrigatório.</small>
               <small *ngIf="userForm.get('email')?.errors?.['email']">Por favor, insira um e-mail válido.</small>
@@ -76,11 +121,9 @@
           <div class="form-group">
             <label>Nova Senha (Opcional)</label>
             <input type="password" formControlName="password" placeholder="Deixe em branco para manter a atual"
-              [class.invalid]="userForm.get('password')?.invalid && userForm.get('password')?.touched" />
-            <div class="validation-error"
-              *ngIf="userForm.get('password')?.invalid && userForm.get('password')?.touched">
-              <small *ngIf="userForm.get('password')?.errors?.['minlength']">A senha deve ter pelo menos 6
-                caracteres.</small>
+                   [class.invalid]="userForm.get('password')?.invalid && userForm.get('password')?.touched" />
+            <div class="validation-error" *ngIf="userForm.get('password')?.invalid && userForm.get('password')?.touched">
+              <small *ngIf="userForm.get('password')?.errors?.['minlength']">A senha deve ter pelo menos 6 caracteres.</small>
             </div>
           </div>
 
