@@ -67,6 +67,21 @@ services:
     networks:
       - app_network
 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: angular_frontend
+    depends_on:
+      - web
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - app_network
+    ports:
+      - "4200:4200"
+
 networks:
   app_network:
     driver: bridge
