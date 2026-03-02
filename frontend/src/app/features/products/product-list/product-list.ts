@@ -7,7 +7,7 @@ import { AuthService } from '../../../core/services/auth';
 import { Router } from '@angular/router';
 import { NotificationService } from '../../../core/services/notification';
 import { ConfirmService } from '../../../core/services/confirm';
-import { ViewProductService } from '../../../core/services/view-product.service';
+import { ViewProductService } from '../../../core/services/view-product';
 
 @Component({
   selector: 'app-product-list',

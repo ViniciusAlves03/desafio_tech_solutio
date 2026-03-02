@@ -3,9 +3,23 @@
     <div class="header-content">
       <span class="brand">Desafio Tech Solutio</span>
 
-      <button *ngIf="isLoggedIn()" class="btn-logout-header" (click)="logout()">
-        Sair
-      </button>
+      <div class="header-actions" *ngIf="isLoggedIn()">
+        <div class="user-menu-container">
+          <button class="btn-user-icon" (click)="toggleUserMenu($event)">
+            <span class="user-icon">👤</span>
+            <span class="caret">▼</span>
+          </button>
+
+          <div class="dropdown-menu" *ngIf="isUserMenuOpen">
+            <button (click)="openUserModal('view')">Visualizar Perfil</button>
+            <button (click)="openUserModal('edit')">Editar Conta</button>
+            <div class="divider"></div>
+            <button class="text-danger" (click)="confirmDeleteAccount()">Excluir Conta</button>
+          </div>
+        </div>
+
+        <button class="btn-logout-header" (click)="logout()">Sair</button>
+      </div>
     </div>
   </header>
 
@@ -14,77 +28,83 @@
   </main>
 
   <footer class="main-footer">
-    <p>
-      Código disponível no
-      <a href="https://github.com/ViniciusAlves03/desafio_tech_solutio" target="_blank" rel="noopener noreferrer">
-        GitHub
-      </a>
+    <p>Código disponível no <a href="https://github.com/ViniciusAlves03/desafio_tech_solutio" target="_blank">GitHub</a>
     </p>
   </footer>
-</div>
 
-<div class="modal-overlay" *ngIf="viewSrv.display()">
-  <div class="modal-card view-card product-detail-modal">
-    <button class="close-btn" (click)="viewSrv.close()" aria-label="Fechar">×</button>
+  <div class="modal-overlay" *ngIf="showUserModal">
+    <div class="modal-card user-modal">
+      <button class="close-btn" (click)="closeUserModal()" aria-label="Fechar">×</button>
 
-    <h3>Detalhes do Produto</h3>
+      <h3>{{ userModalMode === 'view' ? 'O Meu Perfil' : 'Editar Conta' }}</h3>
 
-    <div class="product-info-layout" *ngIf="viewSrv.product() as p">
-      <div class="image-column">
-        <div class="img-wrapper" *ngIf="p.imageUrl; else noImage">
-          <img [src]="p.imageUrl" [alt]="p.name">
+      <div *ngIf="userModalMode === 'view' && userData" class="user-details">
+        <p><strong>Username:</strong> {{ userData.username }}</p>
+        <p><strong>E-mail:</strong> {{ userData.email }}</p>
+
+        <div class="modal-actions">
+          <button class="btn-cancel" (click)="closeUserModal()">Fechar</button>
+          <button class="btn-confirm" (click)="openUserModal('edit')">Editar Dados</button>
         </div>
-        <ng-template #noImage>
-          <div class="no-image-placeholder">
-            <span>Sem Imagem</span>
-          </div>
-        </ng-template>
       </div>
 
-      <div class="details-column">
-        <dl class="details-list">
-          <div class="detail-item main-item">
-            <dt>Produto</dt>
-            <dd class="product-name">{{ p.name }}</dd>
-          </div>
+      <div *ngIf="userModalMode === 'edit'">
+        <form [formGroup]="userForm" (ngSubmit)="onUpdateUser()" class="user-form">
 
-          <div class="detail-group">
-            <div class="detail-item">
-              <dt>Marca</dt>
-              <dd>{{ p.brand }}</dd>
-            </div>
-
-            <div class="detail-item" *ngIf="p.quantity !== null && p.quantity !== undefined">
-              <dt>Quantidade</dt>
-              <dd>{{ p.quantity }} unidades</dd>
+          <div class="form-group">
+            <label>Username</label>
+            <input type="text" formControlName="username"
+              [class.invalid]="userForm.get('username')?.invalid && userForm.get('username')?.touched" />
+            <div class="validation-error"
+              *ngIf="userForm.get('username')?.invalid && userForm.get('username')?.touched">
+              <small *ngIf="userForm.get('username')?.errors?.['required']">O nome de usuário é obrigatório.</small>
+              <small *ngIf="userForm.get('username')?.errors?.['minlength']">O nome de usuário deve ter pelo menos 3
+                caracteres.</small>
             </div>
           </div>
 
-          <div class="detail-item price-item">
-            <dt>Preço</dt>
-            <dd class="price">{{ p.price | currency:'BRL' }}</dd>
+          <div class="form-group">
+            <label>E-mail</label>
+            <input type="email" formControlName="email"
+              [class.invalid]="userForm.get('email')?.invalid && userForm.get('email')?.touched" />
+            <div class="validation-error" *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched">
+              <small *ngIf="userForm.get('email')?.errors?.['required']">O e-mail é obrigatório.</small>
+              <small *ngIf="userForm.get('email')?.errors?.['email']">Por favor, insira um e-mail válido.</small>
+            </div>
           </div>
-        </dl>
+
+          <div class="form-group">
+            <label>Nova Senha (Opcional)</label>
+            <input type="password" formControlName="password" placeholder="Deixe em branco para manter a atual"
+              [class.invalid]="userForm.get('password')?.invalid && userForm.get('password')?.touched" />
+            <div class="validation-error"
+              *ngIf="userForm.get('password')?.invalid && userForm.get('password')?.touched">
+              <small *ngIf="userForm.get('password')?.errors?.['minlength']">A senha deve ter pelo menos 6
+                caracteres.</small>
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="btn-cancel" (click)="closeUserModal()">Cancelar</button>
+            <button type="submit" class="btn-confirm" [disabled]="userForm.invalid">Salvar Alterações</button>
+          </div>
+        </form>
       </div>
     </div>
+  </div>
 
-    <div class="modal-actions">
-      <button class="btn-cancel" (click)="viewSrv.close()">Fechar</button>
+  <div class="modal-overlay" *ngIf="confirmSrv.display()">
+    <div class="modal-card">
+      <h3>Confirmação</h3>
+      <p>{{ confirmSrv.message }}</p>
+      <div class="modal-actions">
+        <button class="btn-cancel" (click)="confirmSrv.close()">Não</button>
+        <button class="btn-confirm" (click)="confirmSrv.confirm()">Sim, Confirmar</button>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="modal-overlay" *ngIf="confirmSrv.display()">
-  <div class="modal-card">
-    <h3>Confirmação</h3>
-    <p>{{ confirmSrv.message }}</p>
-    <div class="modal-actions">
-      <button class="btn-cancel" (click)="confirmSrv.close()">Não</button>
-      <button class="btn-confirm" (click)="confirmSrv.confirm()">Sim, Excluir</button>
-    </div>
+  <div *ngIf="notify.notification() as n" class="toast-container" [ngClass]="n.type">
+    {{ n.message }}
   </div>
-</div>
-
-<div *ngIf="notify.notification() as n" class="toast-container" [ngClass]="n.type">
-  {{ n.message }}
 </div>

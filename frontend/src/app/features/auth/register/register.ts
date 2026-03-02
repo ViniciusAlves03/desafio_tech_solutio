@@ -43,7 +43,7 @@ export class RegisterComponent {
       },
       error: (err) => {
         this.isLoading = false;
-        const rawMsg = err.error?.message || 'Internal Server Error';
+        const rawMsg = err.error?.description || err.error?.message || 'Internal Server Error';
         this.notify.translateAndShow(rawMsg, 'error');
       }
     });

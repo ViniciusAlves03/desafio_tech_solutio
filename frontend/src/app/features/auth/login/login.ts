@@ -53,7 +53,7 @@ export class LoginComponent implements OnInit {
       },
       error: (err) => {
         this.isLoading = false;
-        const rawMsg = err.error?.message || 'Internal Server Error';
+        const rawMsg = err.error?.description || err.error?.message || 'Internal Server Error';
 
         this.notify.translateAndShow(rawMsg, 'error');
         this.errorMessage = BACKEND_MESSAGES[rawMsg] || 'Erro ao efetuar login.';

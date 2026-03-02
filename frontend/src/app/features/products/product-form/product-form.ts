@@ -98,7 +98,7 @@ export class ProductFormComponent implements OnInit {
       },
       error: (err) => {
         this.isLoading = false;
-        const rawMsg = err.error?.message || 'Erro ao processar produto.';
+        const rawMsg = err.error?.description || err.error?.message || 'Erro ao processar produto.';
         this.notify.translateAndShow(rawMsg, 'error');
       }
     });
