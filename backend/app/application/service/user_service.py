@@ -7,11 +7,11 @@ class UserService:
     def __init__(self, user_repository: IUserRepository):
         self.user_repository = user_repository
 
-    def get_all(self):
-        try:
-            return self.user_repository.get_all()
-        except Exception as error:
-            raise error
+    # def get_all(self):
+    #     try:
+    #         return self.user_repository.get_all()
+    #     except Exception as error:
+    #         raise error
 
     def get_by_id(self, user_id):
         try:

@@ -24,16 +24,16 @@ def create_user():
         return make_response(jsonify(api_error.toJSON()), api_error.code)
 
 
-@user_bp.route('/users', methods=['GET'])
-@jwt_required()
-@swag_from('../docs/swagger/users/get_all.yml')
-def get_users():
-    try:
-        users = user_service.get_all()
-        return jsonify(users_schema.dump(users)), 200
-    except Exception as error:
-        api_error = APIExceptionManager.build(error)
-        return make_response(jsonify(api_error.toJSON()), api_error.code)
+# @user_bp.route('/users', methods=['GET'])
+# @jwt_required()
+# @swag_from('../docs/swagger/users/get_all.yml')
+# def get_users():
+#     try:
+#         users = user_service.get_all()
+#         return jsonify(users_schema.dump(users)), 200
+#     except Exception as error:
+#         api_error = APIExceptionManager.build(error)
+#         return make_response(jsonify(api_error.toJSON()), api_error.code)
 
 
 @user_bp.route('/users/<int:id>', methods=['GET'])

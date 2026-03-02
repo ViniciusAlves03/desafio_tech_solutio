@@ -19,9 +19,9 @@ class IUserRepository(ABC):
     def get_by_username(self, username: str) -> User:
         pass
 
-    @abstractmethod
-    def get_all(self) -> list[User]:
-        pass
+    # @abstractmethod
+    # def get_all(self) -> list[User]:
+    #     pass
 
     @abstractmethod
     def get_by_login_input(self, login_input: str) -> User:
